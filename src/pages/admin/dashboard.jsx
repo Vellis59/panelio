@@ -301,7 +301,26 @@ export default function AdminDashboard() {
                 <div key={groupName} className="mb-4 bg-white dark:bg-gray-800 rounded-lg shadow">
                   <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
                     <h3 className="font-semibold text-gray-800 dark:text-gray-100">{groupName}</h3>
-                    <div className="flex gap-2">
+                    <div className="flex gap-1 items-center">
+                      <button onClick={async () => {
+                        const gIdx = services.findIndex((g) => Object.keys(g)[0] === groupName);
+                        if (gIdx > 0) {
+                          const newGroups = [...services]; [newGroups[gIdx-1], newGroups[gIdx]] = [newGroups[gIdx], newGroups[gIdx-1]];
+                          setServices(newGroups);
+                          await fetch("/api/admin/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "reorder", groups: newGroups }) });
+                        }
+                      }} disabled={services.findIndex((g) => Object.keys(g)[0] === groupName) === 0}
+                        className="text-xs px-1 py-1 text-gray-400 hover:text-blue-500 disabled:opacity-20">↑</button>
+                      <button onClick={async () => {
+                        const gIdx = services.findIndex((g) => Object.keys(g)[0] === groupName);
+                        if (gIdx < services.length - 1) {
+                          const newGroups = [...services]; [newGroups[gIdx], newGroups[gIdx+1]] = [newGroups[gIdx+1], newGroups[gIdx]];
+                          setServices(newGroups);
+                          await fetch("/api/admin/services", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "reorder", groups: newGroups }) });
+                        }
+                      }} disabled={services.findIndex((g) => Object.keys(g)[0] === groupName) === services.length - 1}
+                        className="text-xs px-1 py-1 text-gray-400 hover:text-blue-500 disabled:opacity-20">↓</button>
+                      <span className="mx-1">|</span>
                       <button onClick={() => setAddingService(groupName)}
                         className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded dark:bg-blue-900 dark:text-blue-300">
                         + Service
