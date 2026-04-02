@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import BackupTab from "components/admin/BackupTab";
 
 // --- Service Form Component ---
 function ServiceForm({ group, service, onSave, onCancel }) {
@@ -227,6 +228,8 @@ export default function AdminDashboard() {
     { id: "bookmarks", label: "Bookmarks", icon: "🔖" },
     { id: "widgets", label: "Widgets", icon: "🧩" },
     { id: "settings", label: "Settings", icon: "⚙️" },
+    { id: "preview", label: "Preview", icon: "👁️" },
+    { id: "backup", label: "Backup", icon: "💾" },
   ];
 
   return (
@@ -272,6 +275,26 @@ export default function AdminDashboard() {
         {/* Settings Tab */}
         {tab === "settings" && (
           <SettingsTab />
+        )}
+
+        {/* Preview Tab */}
+        {tab === "preview" && (
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Live Preview</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+              <iframe
+                src="/"
+                className="w-full border-0"
+                style={{ height: "80vh" }}
+                title="Homepage Preview"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Backup Tab */}
+        {tab === "backup" && (
+          <BackupTab />
         )}
 
         {/* Services Tab */}
