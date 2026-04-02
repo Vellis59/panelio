@@ -225,6 +225,8 @@ export default function AdminDashboard() {
   const tabs = [
     { id: "services", label: "Services", icon: "📦" },
     { id: "bookmarks", label: "Bookmarks", icon: "🔖" },
+    { id: "widgets", label: "Widgets", icon: "🧩" },
+    { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
   return (
@@ -262,6 +264,16 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
+        {/* Widgets Tab */}
+        {tab === "widgets" && (
+          <WidgetsTab />
+        )}
+
+        {/* Settings Tab */}
+        {tab === "settings" && (
+          <SettingsTab />
+        )}
+
         {/* Services Tab */}
         {tab === "services" && (
           <div>
@@ -351,6 +363,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
+        {/* Bookmarks Tab */}
         {/* Bookmarks Tab */}
         {tab === "bookmarks" && (
           <div>
@@ -442,3 +455,242 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+// --- Widgets Tab Component ---
+const WIDGET_TYPES = [
+  "resources", "search", "weather", "openweathermap", "weatherapi", "openmeteo",
+  "datetime", "glances", "docker", "kubernetes", "clock", "logo",
+];
+
+function WidgetForm({ widget, index, onSave, onCancel }) {
+  const isEdit = widget !== null;
+  const existingType = isEdit ? Object.keys(widget)[0] : "";
+  const existingOpts = isEdit ? widget[existingType] : {};
+
+  const [type, setType] = useState(existingType);
+  const [optionsJson, setOptionsJson] = useState(
+    JSON.stringify(existingOpts, null, 2)
+  );
+  const [error, setError] = useState("");
+
+  const handleSave = () => {
+    try {
+      const opts = optionsJson.trim() ? JSON.parse(optionsJson) : {};
+      onSave({ type, options: opts }, index);
+    } catch (e) {
+      setError("Invalid JSON: " + e.message);
+    }
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border dark:border-gray-700 mb-3">
+      <h4 className="font-medium mb-3 text-gray-700 dark:text-gray-200">
+        {isEdit ? `Edit Widget #${index}` : "Add Widget"}
+      </h4>
+      <div className="space-y-3">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Type</label>
+          {isEdit ? (
+            <input value={type} readOnly className="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
+          ) : (
+            <select value={type} onChange={(e) => setType(e.target.value)}
+              className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm">
+              <option value="">Select type...</option>
+              {WIDGET_TYPES.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          )}
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Options (JSON)</label>
+          <textarea value={optionsJson} onChange={(e) => { setOptionsJson(e.target.value); setError(""); }}
+            rows={6}
+            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm font-mono"
+            placeholder='{ "cpu": true, "memory": true }' />
+          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        </div>
+      </div>
+      <div className="flex gap-2 mt-3">
+        <button onClick={handleSave} disabled={!type}
+          className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
+          Save
+        </button>
+        <button onClick={onCancel}
+          className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded text-sm">
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function WidgetsTab() {
+  const [widgets, setWidgets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [editingIdx, setEditingIdx] = useState(null);
+
+  const fetchWidgets = useCallback(async () => {
+    const res = await fetch("/api/admin/widgets");
+    if (res.ok) setWidgets(await res.json());
+  }, []);
+
+  useEffect(() => { fetchWidgets().finally(() => setLoading(false)); }, [fetchWidgets]);
+
+  const addWidget = async (widgetData) => {
+    await fetch("/api/admin/widgets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ widget: widgetData }),
+    });
+    setAdding(false);
+    fetchWidgets();
+  };
+
+  const updateWidget = async (widgetData, idx) => {
+    await fetch("/api/admin/widgets", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ index: idx, widget: widgetData }),
+    });
+    setEditingIdx(null);
+    fetchWidgets();
+  };
+
+  const deleteWidget = async (idx) => {
+    const w = widgets[idx];
+    const type = Object.keys(w)[0];
+    if (!confirm(`Delete widget "${type}" #${idx}?`)) return;
+    await fetch("/api/admin/widgets", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ index: idx }),
+    });
+    fetchWidgets();
+  };
+
+  if (loading) return <p className="text-gray-400 text-center py-8">Loading...</p>;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Widgets</h2>
+        <button onClick={() => setAdding(true)} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+          + Add Widget
+        </button>
+      </div>
+
+      {adding && (
+        <WidgetForm onSave={addWidget} onCancel={() => setAdding(false)} />
+      )}
+
+      {widgets.length === 0 && !adding && (
+        <p className="text-gray-400 text-center py-8">No widgets configured. Add one above!</p>
+      )}
+
+      {widgets.map((w, idx) => {
+        const type = Object.keys(w)[0];
+        const opts = w[type];
+        return (
+          <div key={idx}>
+            {editingIdx === idx ? (
+              <WidgetForm widget={w} index={idx} onSave={updateWidget} onCancel={() => setEditingIdx(null)} />
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-3">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <div>
+                    <span className="font-medium text-gray-700 dark:text-gray-200">{type}</span>
+                    <span className="text-xs text-gray-400 ml-2">#{idx}</span>
+                    <pre className="text-xs text-gray-500 mt-1 ml-0">{JSON.stringify(opts, null, 2)}</pre>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => setEditingIdx(idx)} className="text-xs text-gray-400 hover:text-blue-500">✏️</button>
+                    <button onClick={() => deleteWidget(idx)} className="text-xs text-gray-400 hover:text-red-500">🗑️</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// --- Settings Tab Component ---
+function SettingsTab() {
+  const [settings, setSettings] = useState({});
+  const [json, setJson] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/settings")
+      .then((r) => r.json())
+      .then((data) => {
+        setSettings(data);
+        setJson(JSON.stringify(data, null, 2));
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const saveSettings = async () => {
+    setError("");
+    setSuccess(false);
+    setSaving(true);
+    try {
+      const updates = JSON.parse(json);
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updates }),
+      });
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Save failed");
+      }
+    } catch (e) {
+      setError("Invalid JSON: " + e.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <p className="text-gray-400 text-center py-8">Loading...</p>;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Settings</h2>
+        <div className="flex gap-2 items-center">
+          {success && <span className="text-green-500 text-sm">✅ Saved!</span>}
+          <button onClick={saveSettings} disabled={saving}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
+            {saving ? "Saving..." : "Save Settings"}
+          </button>
+        </div>
+      </div>
+
+      {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <p className="text-xs text-gray-400 mb-2">
+          Edit settings.yaml as JSON. Common keys: title, description, language, layout, color, theme, providers, etc.
+        </p>
+        <textarea
+          value={json}
+          onChange={(e) => { setJson(e.target.value); setError(""); setSuccess(false); }}
+          rows={20}
+          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm font-mono"
+        />
+      </div>
+    </div>
+  );
+}
+
