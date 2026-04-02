@@ -7,6 +7,19 @@ import createLogger from "utils/logger";
 const logger = createLogger("adminYaml");
 
 /**
+ * Trigger Next.js revalidation of the homepage after config changes
+ */
+async function triggerRevalidate() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+    await fetch(`${baseUrl}/api/revalidate`);
+    logger.debug("Revalidation triggered");
+  } catch (e) {
+    logger.warn(`Revalidation failed: ${e.message}`);
+  }
+}
+
+/**
  * Read and parse a YAML config file
  */
 export async function readConfig(filename) {
@@ -39,6 +52,9 @@ export async function writeConfig(filename, data) {
   // Write new content
   const content = yaml.dump(data, { lineWidth: -1, quotingType: '"', forceQuotes: false });
   await fs.writeFile(filePath, content, "utf8");
+
+  // Trigger homepage revalidation (fire and forget)
+  triggerRevalidate();
   return true;
 }
 
