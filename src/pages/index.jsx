@@ -685,9 +685,9 @@ export default function Wrapper({ initialSettings, fallback }) {
     const presetMap = {
       "velvet-night": { start: "21 15 44", mid: "31 41 88", end: "15 23 42", accent: "139 92 246" },
       "ember-grid": { start: "28 25 23", mid: "68 36 18", end: "17 24 39", accent: "249 115 22" },
-      cloudmilk: { start: "248 250 252", mid: "239 246 255", end: "255 255 255", accent: "96 165 250" },
-      "solar-linen": { start: "255 251 235", mid: "250 245 230", end: "255 255 250", accent: "217 119 6" },
-      "north-sea": { start: "226 232 240", mid: "203 213 225", end: "241 245 249", accent: "14 116 144" },
+      cloudmilk: { start: "245 245 245", mid: "240 242 245", end: "250 250 252", accent: "100 116 139" },
+      "solar-linen": { start: "245 240 230", mid: "238 232 218", end: "250 248 240", accent: "161 98 7" },
+      "north-sea": { start: "30 41 59", mid: "51 65 85", end: "15 23 42", accent: "56 189 248" },
     };
     const activePreset = presetMap[preset] || presetMap["velvet-night"];
     html.style.setProperty("--panelio-accent", activePreset.accent);
