@@ -1,0 +1,39 @@
+- Operations:
+    - Server Notes:
+        - abbr: SN
+          href: https://notes.vellis.cc/server-notes
+    - Runbook:
+        - abbr: RB
+          href: https://docs.vellis.cc/runbook
+    - Emergency Checklist:
+        - abbr: EC
+          href: https://docs.vellis.cc/emergency
+    - Infra Map:
+        - abbr: IM
+          href: https://docs.vellis.cc/infra-map
+- Documentation:
+    - Panelio Roadmap:
+        - abbr: PR
+          href: https://docs.vellis.cc/panelio-roadmap
+    - Homepage Upstream:
+        - abbr: HP
+          href: https://github.com/gethomepage/homepage
+    - OpenClaw Docs:
+        - abbr: OC
+          href: https://docs.openclaw.ai
+    - Docker Docs:
+        - abbr: DD
+          href: https://docs.docker.com
+- External:
+    - GitHub:
+        - abbr: GH
+          href: https://github.com
+    - Cloudflare Dashboard:
+        - abbr: CF
+          href: https://dash.cloudflare.com
+    - Vikunja:
+        - abbr: VK
+          href: https://vikunja.vellis.cc
+    - Zulip:
+        - abbr: ZU
+          href: https://vellis.zulipchat.com

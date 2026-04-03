@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/version-alpha-orange" alt="alpha">
+  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="alpha">
   <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="license">
 </p>
 
