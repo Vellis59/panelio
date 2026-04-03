@@ -357,6 +357,29 @@ describe("pages/index Index routing + SWR branches", () => {
     expect(screen.getByText("x: y")).toBeInTheDocument();
   });
 
+  it("renders the Panelio overview summary cards", async () => {
+    state.validateData = [];
+    state.servicesData = [
+      { name: "Infra", services: [{ name: "A", href: "https://a.test" }, { name: "B", href: "https://b.test" }], groups: [] },
+      { name: "Media", services: [{ name: "C", href: "https://c.test" }], groups: [] },
+    ];
+    state.bookmarksData = [
+      { name: "Docs", bookmarks: [{ name: "Guide", href: "https://guide.test" }] },
+    ];
+    state.widgetsData = [{ type: "search" }, { type: "resources" }];
+
+    await renderIndex({ initialSettings: { title: "Homepage", layout: {} }, settings: { layout: {} } });
+
+    expect(screen.getByText("Panelio Overview")).toBeInTheDocument();
+    expect(screen.getByText("Your dashboard at a glance")).toBeInTheDocument();
+    expect(screen.getByText("Service groups")).toBeInTheDocument();
+    expect(screen.getByText("Services")).toBeInTheDocument();
+    expect(screen.getByText("Bookmark groups")).toBeInTheDocument();
+    expect(screen.getByText("Bookmarks")).toBeInTheDocument();
+    expect(screen.getByText("Widgets")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open Admin" })).toBeInTheDocument();
+  });
+
   it("marks the UI stale when the hash changes and triggers a revalidate reload", async () => {
     state.validateData = [];
     state.hashData = { hash: "new-hash" };

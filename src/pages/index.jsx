@@ -42,6 +42,71 @@ const Version = dynamic(() => import("components/version"), {
 
 const rightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime"];
 
+function PanelioOverview({ services, bookmarks, widgets, cardBlur }) {
+  const serviceGroups = services?.length || 0;
+  const serviceCount = services?.reduce((sum, group) => sum + (group.services?.length || 0), 0) || 0;
+  const bookmarkGroups = bookmarks?.length || 0;
+  const bookmarkCount = bookmarks?.reduce((sum, group) => sum + (group.bookmarks?.length || 0), 0) || 0;
+  const widgetCount = widgets?.length || 0;
+
+  const cards = [
+    { label: "Service groups", value: serviceGroups },
+    { label: "Services", value: serviceCount },
+    { label: "Bookmark groups", value: bookmarkGroups },
+    { label: "Bookmarks", value: bookmarkCount },
+    { label: "Widgets", value: widgetCount },
+  ];
+
+  return (
+    <section className="m-5 mb-0 sm:m-9 sm:mb-0">
+      <div
+        className={classNames(
+          "rounded-xl border border-white/10 bg-theme-100/20 dark:bg-white/5 shadow-md shadow-theme-900/10 dark:shadow-theme-900/20 p-4 sm:p-5",
+          cardBlur !== undefined && `backdrop-blur${cardBlur.length ? `-${cardBlur}` : ""}`,
+        )}
+      >
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-[0.2em] text-theme-800/70 dark:text-theme-200/60 mb-2">
+              Panelio Overview
+            </div>
+            <h2 className="text-xl sm:text-2xl font-semibold text-theme-900 dark:text-theme-50">
+              Your dashboard at a glance
+            </h2>
+            <p className="text-sm sm:text-base text-theme-800/70 dark:text-theme-200/70 mt-1 max-w-2xl">
+              Panelio is currently managing {serviceCount} service{serviceCount === 1 ? "" : "s"} across {serviceGroups} group{serviceGroups === 1 ? "" : "s"}.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="/admin"
+              className="inline-flex items-center rounded-lg bg-theme-700 px-4 py-2 text-sm font-medium text-white hover:bg-theme-800 transition"
+            >
+              Open Admin
+            </a>
+            <a
+              href="/admin"
+              className="inline-flex items-center rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-theme-900 dark:text-theme-50 hover:bg-white/5 transition"
+            >
+              Manage Content
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+          {cards.map((card) => (
+            <div key={card.label} className="rounded-lg border border-white/10 bg-black/10 px-4 py-3">
+              <div className="text-xs uppercase tracking-wide text-theme-800/60 dark:text-theme-200/60">{card.label}</div>
+              <div className="mt-1 text-2xl font-semibold text-theme-900 dark:text-theme-50">{card.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Normalize language codes so older config values like zh-CN still point to Crowdin-provided ones
 const LANGUAGE_ALIASES = {
   "zh-cn": "zh-Hans",
@@ -454,6 +519,9 @@ function Home({ initialSettings }) {
           isOpen={searching}
           setSearching={setSearching}
         />
+
+        <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} />
+
         <div
           id="information-widgets"
           className={classNames(
