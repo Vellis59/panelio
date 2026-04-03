@@ -655,6 +655,9 @@ export default function Wrapper({ initialSettings, fallback }) {
     const body = document.body;
     const pageWrapper = document.getElementById("page_wrapper");
 
+    // Resolve preset first
+    const preset = livePreset || settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
+
     // Auto-switch light/dark based on preset brightness
     const lightPresets = ["cloudmilk", "solar-linen"];
     const shouldBeLight = lightPresets.includes(preset);
@@ -675,7 +678,6 @@ export default function Wrapper({ initialSettings, fallback }) {
       html.classList.add(desiredThemeClass);
     }
 
-    const preset = livePreset || settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
     const desiredPresetClass = `panelio-preset-${preset}`;
     const presetClassesToRemove = Array.from(html.classList).filter(
       (cls) => cls.startsWith("panelio-preset-") && cls !== desiredPresetClass,
