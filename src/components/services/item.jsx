@@ -66,7 +66,12 @@ export default function Item({ service, groupName, useEqualHeights }) {
           <button
             type="button"
             onClick={togglePin}
-            className={`absolute top-1 left-1 z-20 text-sm transition-opacity ${isPinned ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+            className={classNames(
+              "absolute top-1 left-1 z-20 text-sm transition-all rounded-full px-1 py-0.5 backdrop-blur-sm",
+              isPinned
+                ? "opacity-100 bg-amber-500/20"
+                : "opacity-35 group-hover:opacity-100 bg-black/20 hover:bg-black/35 dark:bg-white/10 dark:hover:bg-white/20",
+            )}
             title={isPinned ? "Unpin" : "Pin to top"}
           >
             <span className={isPinned ? "text-amber-400" : "text-theme-400 dark:text-theme-500"}>{isPinned ? String.fromCharCode(9733) : String.fromCharCode(9734)}</span>

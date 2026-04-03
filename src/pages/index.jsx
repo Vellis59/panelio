@@ -574,14 +574,14 @@ function Home({ initialSettings }) {
           services?.forEach((g) => {
             g.services?.forEach((s) => {
               if (pinnedKeys.includes(`${g.name}::${s.name}`)) {
-                pinnedSvcs.push(s);
+                pinnedSvcs.push({ ...s, __groupName: g.name });
               }
               // sub-groups
               if (Array.isArray(s)) {
                 s.forEach((sub) => {
                   const subName = Object.keys(sub)[0];
                   if (pinnedKeys.includes(`${g.name}::${subName}`)) {
-                    pinnedSvcs.push(sub[subName]);
+                    pinnedSvcs.push({ ...sub[subName], __groupName: g.name, name: subName });
                   }
                 });
               }

@@ -10,3 +10,7 @@ panelioOverviewDescription: Panelio is currently managing 50 services across 10 
 panelioShowGreeting: true
 panelioShowClock: true
 panelioGreetingName: Vellis
+panelioPinned:
+  - Monitoring::Uptime Kuma
+  - Networking::Technitium
+  - Monitoring::Grafana

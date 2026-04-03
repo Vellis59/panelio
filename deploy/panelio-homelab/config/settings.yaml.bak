@@ -9,4 +9,9 @@ panelioOverviewSubtitle: Your dashboard at a glance
 panelioOverviewDescription: Panelio is currently managing 50 services across 10 groups.
 panelioShowGreeting: true
 panelioShowClock: true
-panelioGreetingName: bobby
+panelioGreetingName: Vellis
+panelioPinned:
+  - Monitoring::Uptime Kuma
+  - Networking::Technitium
+  - Monitoring::Grafana
+  - Media::Plex
