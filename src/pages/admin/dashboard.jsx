@@ -949,6 +949,7 @@ function SettingsTab() {
   const [showGreeting, setShowGreeting] = useState(true);
   const [showClock, setShowClock] = useState(true);
   const [cardStyle, setCardStyle] = useState("panelio");
+  const [showStatusDot, setShowStatusDot] = useState(false);
   const [themePreset, setThemePreset] = useState("dark-mirror");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -968,6 +969,7 @@ function SettingsTab() {
         setShowGreeting(data.panelioShowGreeting !== false);
         setShowClock(data.panelioShowClock !== false);
         setCardStyle(data.panelioCardStyle || "panelio");
+        setShowStatusDot(data.panelioShowStatusDot === true);
         setThemePreset(data.panelioThemePreset || "velvet-night");
       })
       .finally(() => setLoading(false));
@@ -991,6 +993,7 @@ function SettingsTab() {
       updates.panelioShowGreeting = showGreeting;
       updates.panelioShowClock = showClock;
       updates.panelioCardStyle = cardStyle;
+      updates.panelioShowStatusDot = showStatusDot;
       updates.panelioThemePreset = themePreset;
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
@@ -1121,6 +1124,10 @@ function SettingsTab() {
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <input type="checkbox" checked={showClock} onChange={(e) => setShowClock(e.target.checked)} className="rounded" />
               Show clock & date
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <input type="checkbox" checked={showStatusDot} onChange={(e) => setShowStatusDot(e.target.checked)} className="rounded" />
+              Show status dots (green/red)
             </label>
           </div>
         </div>

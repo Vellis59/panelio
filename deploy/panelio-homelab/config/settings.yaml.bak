@@ -16,5 +16,6 @@ panelioPinned:
   - Monitoring::Grafana
   - Monitoring::Dozzle
   - Networking::Pi-hole
-panelioCardStyle: panelio
-panelioThemePreset: velvet-night
+  - Monitoring::Prometheus
+panelioCardStyle: classic
+panelioThemePreset: dark-mirror

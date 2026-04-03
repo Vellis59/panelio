@@ -222,7 +222,7 @@ export default function Item({ service, groupName, useEqualHeights }) {
         {menuOpen && isPanelioStyle && (
           <div
             ref={menuRef}
-            className="absolute bottom-8 right-2 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+            className="absolute top-8 right-2 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
             onClick={(e) => e.stopPropagation()}
           >
             {service.href && (
