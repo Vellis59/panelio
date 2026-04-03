@@ -294,7 +294,7 @@ function Home({ initialSettings }) {
   const { data: services } = useSWR("/api/services");
   const { data: bookmarks } = useSWR("/api/bookmarks");
   const { data: widgets } = useSWR("/api/widgets");
-  const { data: liveThemeSettings } = useSWR("/api/theme");
+  const { data: liveThemeSettings } = useSWR("/api/panelio-settings");
 
   const servicesAndBookmarks = [...bookmarks.map((bg) => bg.bookmarks).flat(), ...getAllServices(services)].filter(
     (i) => i?.href,
