@@ -6,4 +6,7 @@ color: slate
 theme: dark
 target: _blank
 panelioOverviewSubtitle: Your dashboard at a glance
-panelioOverviewDescription: ok
+panelioOverviewDescription: Panelio is currently managing 50 services across 10 groups.
+panelioShowGreeting: false
+panelioShowClock: true
+panelioGreetingName: Bonne journée Vellis

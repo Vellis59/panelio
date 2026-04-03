@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "next-i18next";
 
-function getGreeting(hour, t) {
-  if (hour >= 5 && hour < 12) return t("panelio.greeting.morning") || "Good morning";
-  if (hour >= 12 && hour < 18) return t("panelio.greeting.afternoon") || "Good afternoon";
-  if (hour >= 18 && hour < 22) return t("panelio.greeting.evening") || "Good evening";
-  return t("panelio.greeting.night") || "Good night";
+function getGreeting(hour) {
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 18) return "Good afternoon";
+  if (hour >= 18 && hour < 22) return "Good evening";
+  return "Good night";
 }
 
 function formatTime(date) {
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 }
 
 function formatDate(date) {
-  return date.toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" });
+  return date.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" });
 }
 
 export default function PanelioGreeting({ settings }) {
-  const { t } = useTranslation();
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -26,10 +24,10 @@ export default function PanelioGreeting({ settings }) {
   }, []);
 
   const hour = now.getHours();
-  const greeting = getGreeting(hour, t);
+  const greeting = getGreeting(hour);
   const name = settings?.panelioGreetingName || "";
-  const showClock = settings?.panelioShowClock !== false; // default true
-  const showGreeting = settings?.panelioShowGreeting !== false; // default true
+  const showClock = settings?.panelioShowClock !== false;
+  const showGreeting = settings?.panelioShowGreeting !== false;
 
   if (!showClock && !showGreeting) return null;
 
