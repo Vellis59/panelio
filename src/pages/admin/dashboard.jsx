@@ -99,8 +99,8 @@ function BookmarkForm({ bookmark, onSave, onCancel }) {
 // --- Sub-group Section Component ---
 function SubgroupSection({ groupName, subgroupName, subItems, editingService, setEditingService, updateService, deleteService, addingServiceToSubgroup, setAddingServiceToSubgroup, saveNewService, renamingSubgroup, setRenamingSubgroup, renameSubgroup, removeSubgroup }) {
   return (
-    <div className="ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 mt-1 mb-1">
-      <div className="flex items-center justify-between py-1.5 px-2 bg-gray-50 dark:bg-gray-750 rounded">
+    <div className="ml-4 pl-3 border-l-2 border-blue-400 dark:border-blue-500 mt-2 mb-2">
+      <div className="flex items-center justify-between py-2 px-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
         {renamingSubgroup?.group === groupName && renamingSubgroup?.oldName === subgroupName ? (
           <div className="flex items-center gap-2 flex-1 mr-2">
             <input autoFocus defaultValue={subgroupName}
@@ -116,15 +116,15 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
               className="text-xs px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded">Cancel</button>
           </div>
         ) : (
-          <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">\uD83D\uDCC1 {subgroupName}</span>
+          <span className="text-sm font-semibold text-blue-700 dark:text-blue-300 tracking-wide">\uD83D\uDCC1 {subgroupName}</span>
         )}
-        <div className="flex gap-1">
+        <div className="flex gap-1.5">
           <button onClick={() => setRenamingSubgroup({ group: groupName, oldName: subgroupName })}
-            className="text-xs text-gray-400 hover:text-amber-500">\u270F\uFE0F</button>
+            className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded dark:bg-amber-900 dark:text-amber-300">Rename</button>
           <button onClick={() => setAddingServiceToSubgroup(`${groupName}/${subgroupName}`)}
-            className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded dark:bg-blue-900 dark:text-blue-300">+ Service</button>
+            className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded dark:bg-blue-900 dark:text-blue-300">+ Service</button>
           <button onClick={() => removeSubgroup(groupName, subgroupName)}
-            className="text-xs text-gray-400 hover:text-red-500">\uD83D\uDCC1</button>
+            className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded dark:bg-red-900 dark:text-red-300">Delete</button>
         </div>
       </div>
       <div className="mt-1">
@@ -145,8 +145,8 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
               </div>
               <div className="flex items-center gap-1">
                 {svcData.href && <a href={svcData.href} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">{svcData.href}</a>}
-                <button onClick={() => setEditingService({ group: groupName, index: idx, subgroup: subgroupName })} className="text-xs text-gray-400 hover:text-blue-500">\u270F\uFE0F</button>
-                <button onClick={() => deleteService(groupName, svcName, subgroupName)} className="text-xs text-gray-400 hover:text-red-500">\uD83D\uDDD1\uFE0F</button>
+                <button onClick={() => setEditingService({ group: groupName, index: idx, subgroup: subgroupName })} className="text-xs px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded dark:bg-amber-900 dark:text-amber-300">Edit</button>
+                <button onClick={() => deleteService(groupName, svcName, subgroupName)} className="text-xs px-1.5 py-0.5 bg-red-50 text-red-600 rounded dark:bg-red-900 dark:text-red-300">Del</button>
               </div>
             </div>
           );
