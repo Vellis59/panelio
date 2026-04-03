@@ -8,7 +8,9 @@ export default function BackupTab() {
 
   const handleExport = () => {
     // Need to pass auth cookie - browser will do it automatically
-    const token = document.cookie.match(/homepage_admin_token=([^;]+)/)?.[1];
+    const token =
+      document.cookie.match(/panelio_admin_token=([^;]+)/)?.[1] ||
+      document.cookie.match(/homepage_admin_token=([^;]+)/)?.[1];
     if (!token) return;
     
     // Fetch and trigger download

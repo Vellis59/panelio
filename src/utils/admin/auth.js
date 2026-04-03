@@ -1,7 +1,6 @@
-import { compare, hash } from "crypto";
-
-const ADMIN_PASSWORD = process.env.HOMEPAGE_ADMIN_PASSWORD;
+const ADMIN_PASSWORD = process.env.PANELIO_ADMIN_PASSWORD || process.env.HOMEPAGE_ADMIN_PASSWORD;
 const TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
+const ADMIN_COOKIE_NAME = "panelio_admin_token";
 
 /**
  * Check if admin is enabled (password is configured)
@@ -66,8 +65,11 @@ export function verifyToken(token) {
 export function getTokenFromRequest(req) {
   // Check cookie first
   const cookie = req.headers.cookie || "";
-  const match = cookie.match(/(?:^|;\s*)homepage_admin_token=([^;]*)/);
-  if (match) return match[1];
+  const panelioMatch = cookie.match(new RegExp(`(?:^|;\\s*)${ADMIN_COOKIE_NAME}=([^;]*)`));
+  if (panelioMatch) return panelioMatch[1];
+
+  const legacyMatch = cookie.match(/(?:^|;\s*)homepage_admin_token=([^;]*)/);
+  if (legacyMatch) return legacyMatch[1];
 
   // Check Authorization header
   const auth = req.headers.authorization;
@@ -82,7 +84,7 @@ export function getTokenFromRequest(req) {
  */
 export function requireAdmin(req, res) {
   if (!isAdminEnabled()) {
-    res.status(403).json({ error: "Admin not configured. Set HOMEPAGE_ADMIN_PASSWORD env var." });
+    res.status(403).json({ error: "Admin not configured. Set PANELIO_ADMIN_PASSWORD env var. HOMEPAGE_ADMIN_PASSWORD is still supported as a legacy fallback." });
     return false;
   }
   const token = getTokenFromRequest(req);

@@ -8,6 +8,7 @@ This folder contains a simple local deployment for testing Panelio on a homelab 
 - Container port: `3000`
 - Container name: `panelio`
 - Allowed host: `panelio.vellis.cc`
+- Admin password env: `PANELIO_ADMIN_PASSWORD`
 - Persistent config path: `./config`
 
 ## Start
@@ -37,6 +38,12 @@ docker compose up -d --build
 curl -I -H 'Host: panelio.vellis.cc' http://127.0.0.1:3011/
 curl -H 'Host: panelio.vellis.cc' http://127.0.0.1:3011/api/healthcheck
 ```
+
+## Admin password
+
+Set a real value for `PANELIO_ADMIN_PASSWORD` in `docker-compose.yml` before exposing the admin in a shared environment.
+
+Legacy `HOMEPAGE_ADMIN_PASSWORD` support still exists in code as a compatibility fallback, but new Panelio deployments should use `PANELIO_ADMIN_PASSWORD`.
 
 ## Reverse proxy / domain
 

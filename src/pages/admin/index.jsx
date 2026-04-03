@@ -40,11 +40,11 @@ export default function AdminLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
       <Head>
-        <title>Homepage Admin</title>
+        <title>Panelio Admin</title>
       </Head>
       <div className="w-full max-w-sm p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-100">
-          🔐 Homepage Admin
+          🔐 Panelio Admin
         </h1>
         <form onSubmit={handleSubmit}>
           <input
@@ -65,7 +65,7 @@ export default function AdminLogin() {
           </button>
         </form>
         <p className="text-xs text-center mt-4 text-gray-400">
-          Set HOMEPAGE_ADMIN_PASSWORD to enable admin
+          Set PANELIO_ADMIN_PASSWORD to enable admin
         </p>
       </div>
     </div>
