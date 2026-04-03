@@ -76,7 +76,7 @@ function findSubgroupEntry(groupItems, subgroupName) {
 function isSubgroupItem(item) {
   const key = Object.keys(item)[0];
   const val = item[key];
-  return Array.isArray(val) && val.length > 0 && typeof val[0] === "object" && !val[0].href;
+  return Array.isArray(val);
 }
 
 function getServiceItems(groupItems) {

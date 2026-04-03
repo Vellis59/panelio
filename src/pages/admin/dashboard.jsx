@@ -116,7 +116,7 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
               className="text-xs px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded">Cancel</button>
           </div>
         ) : (
-          <span className="text-sm font-semibold text-blue-700 dark:text-blue-300 tracking-wide">\uD83D\uDCC1 {subgroupName}</span>
+          <span className="text-sm font-semibold text-blue-700 dark:text-blue-300 tracking-wide">📁 {subgroupName}</span>
         )}
         <div className="flex gap-1.5">
           <button onClick={() => setRenamingSubgroup({ group: groupName, oldName: subgroupName })}
