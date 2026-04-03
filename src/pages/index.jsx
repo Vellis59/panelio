@@ -3,6 +3,7 @@ import classNames from "classnames";
 import BookmarksGroup from "components/bookmarks/group";
 import ErrorBoundary from "components/errorboundry";
 import PanelioHostDiagnostic from "components/panelio-host-diagnostic";
+import PanelioGreeting from "components/panelio-greeting";
 import QuickLaunch from "components/quicklaunch";
 import ServicesGroup from "components/services/group";
 import Tab, { slugifyAndEncode } from "components/tab";
@@ -529,6 +530,7 @@ function Home({ initialSettings }) {
           )}
         >
           <div id="widgets-wrap" className={classNames("flex flex-row w-full flex-wrap justify-between gap-x-2")}>
+            <PanelioGreeting settings={settings} />
             {widgets && (
               <>
                 {widgets

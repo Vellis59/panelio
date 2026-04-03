@@ -945,6 +945,9 @@ function SettingsTab() {
   const [overviewTitle, setOverviewTitle] = useState("");
   const [overviewSubtitle, setOverviewSubtitle] = useState("");
   const [overviewDescription, setOverviewDescription] = useState("");
+  const [greetingName, setGreetingName] = useState("");
+  const [showGreeting, setShowGreeting] = useState(true);
+  const [showClock, setShowClock] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -959,6 +962,9 @@ function SettingsTab() {
         setOverviewTitle(data.panelioOverviewTitle || "");
         setOverviewSubtitle(data.panelioOverviewSubtitle || "");
         setOverviewDescription(data.panelioOverviewDescription || "");
+        setGreetingName(data.panelioGreetingName || "");
+        setShowGreeting(data.panelioShowGreeting !== false);
+        setShowClock(data.panelioShowClock !== false);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -976,6 +982,10 @@ function SettingsTab() {
       else delete updates.panelioOverviewSubtitle;
       if (overviewDescription) updates.panelioOverviewDescription = overviewDescription;
       else delete updates.panelioOverviewDescription;
+      if (greetingName) updates.panelioGreetingName = greetingName;
+      else delete updates.panelioGreetingName;
+      updates.panelioShowGreeting = showGreeting;
+      updates.panelioShowClock = showClock;
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -1043,6 +1053,33 @@ function SettingsTab() {
               placeholder="Auto-generated if left empty"
               className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Panelio Greeting & Clock */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
+        <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">👋 Header Greeting & Clock</h3>
+        <p className="text-xs text-gray-400 mb-3">Customize the greeting and clock shown in the header of your homepage.</p>
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block">Your name (shown in greeting)</label>
+            <input
+              value={greetingName}
+              onChange={(e) => setGreetingName(e.target.value)}
+              placeholder="Leave empty for generic greeting"
+              className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+            />
+          </div>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <input type="checkbox" checked={showGreeting} onChange={(e) => setShowGreeting(e.target.checked)} className="rounded" />
+              Show greeting message
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <input type="checkbox" checked={showClock} onChange={(e) => setShowClock(e.target.checked)} className="rounded" />
+              Show clock & date
+            </label>
           </div>
         </div>
       </div>
