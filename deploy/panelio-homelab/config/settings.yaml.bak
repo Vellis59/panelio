@@ -17,4 +17,4 @@ panelioPinned:
   - Monitoring::Dozzle
   - Networking::Pi-hole
 panelioCardStyle: panelio
-panelioThemePreset: velvet-night
+panelioThemePreset: north-sea

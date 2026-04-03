@@ -949,7 +949,7 @@ function SettingsTab() {
   const [showGreeting, setShowGreeting] = useState(true);
   const [showClock, setShowClock] = useState(true);
   const [cardStyle, setCardStyle] = useState("panelio");
-  const [themePreset, setThemePreset] = useState("velvet-night");
+  const [themePreset, setThemePreset] = useState("dark-mirror");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");

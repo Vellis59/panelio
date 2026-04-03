@@ -6,14 +6,14 @@ export default async function handler(req, res) {
     return res.status(200).json({
       color: settings.color || "slate",
       theme: settings.theme || "dark",
-      panelioThemePreset: settings.panelioThemePreset || "velvet-night",
+      panelioThemePreset: settings.panelioThemePreset || "dark-mirror",
       panelioCardStyle: settings.panelioCardStyle || "panelio",
     });
   } catch {
     return res.status(200).json({
       color: "slate",
       theme: "dark",
-      panelioThemePreset: "velvet-night",
+      panelioThemePreset: "dark-mirror",
       panelioCardStyle: "panelio",
     });
   }

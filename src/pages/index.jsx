@@ -656,7 +656,7 @@ export default function Wrapper({ initialSettings, fallback }) {
     const pageWrapper = document.getElementById("page_wrapper");
 
     // Resolve preset first
-    const preset = livePreset || settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
+    const preset = livePreset || settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "dark-mirror";
 
     // Auto-switch light/dark based on preset brightness
     const lightPresets = ["cloudmilk", "solar-linen"];
