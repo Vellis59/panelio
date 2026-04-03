@@ -27,22 +27,32 @@ export default function Item({ bookmark, iconOnly = false }) {
       >
         {iconOnly ? (
           <div className="flex items-center justify-center text-theme-700 hover:text-theme-700 dark:text-theme-200 text-xl font-medium rounded-md bookmark-icon py-0.5">
-            {bookmark.icon && (
+            {bookmark.icon ? (
               <div className="w-7 h-7">
                 <ResolvedIcon icon={bookmark.icon} alt={bookmark.abbr} />
               </div>
+            ) : bookmark.href ? (
+              <div className="w-7 h-7">
+                <ResolvedIcon icon={undefined} href={bookmark.href} serviceName={bookmark.name} alt={bookmark.abbr} />
+              </div>
+            ) : (
+              bookmark.abbr
             )}
-            {!bookmark.icon && bookmark.abbr}
           </div>
         ) : (
           <div className="flex">
             <div className="shrink-0 flex items-center justify-center w-11 bg-theme-500/10 dark:bg-theme-900/50 text-theme-700 hover:text-theme-700 dark:text-theme-200 text-sm font-medium rounded-l-md bookmark-icon">
-              {bookmark.icon && (
+              {bookmark.icon ? (
                 <div className="shrink-0 w-5 h-5">
                   <ResolvedIcon icon={bookmark.icon} alt={bookmark.abbr} />
                 </div>
+              ) : bookmark.href ? (
+                <div className="shrink-0 w-5 h-5">
+                  <ResolvedIcon icon={undefined} href={bookmark.href} serviceName={bookmark.name} alt={bookmark.abbr} />
+                </div>
+              ) : (
+                bookmark.abbr
               )}
-              {!bookmark.icon && bookmark.abbr}
             </div>
             <div className="flex-1 overflow-hidden flex items-center justify-between rounded-r-md bookmark-text">
               <div className="pl-3 py-2 text-xs bookmark-name">{bookmark.name}</div>

@@ -10,6 +10,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "cdn.jsdelivr.net",
       },
+      {
+        protocol: "https",
+        hostname: "t1.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.google.com",
+      },
     ],
     unoptimized: true,
   },

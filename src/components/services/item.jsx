@@ -42,20 +42,20 @@ export default function Item({ service, groupName, useEqualHeights }) {
         )}
       >
         <div className="flex select-none z-0 service-title">
-          {service.icon &&
+          {(service.icon || service.href || service.name) &&
             (hasLink ? (
               <a
                 href={service.href}
                 target={service.target ?? settings.target ?? "_blank"}
                 rel="noreferrer"
                 className="shrink-0 flex items-center justify-center w-12 service-icon z-10"
-                aria-label={service.icon}
+                aria-label={service.icon || service.name}
               >
-                <ResolvedIcon icon={service.icon} />
+                <ResolvedIcon icon={service.icon} href={service.href} serviceName={service.name} />
               </a>
             ) : (
               <div className="shrink-0 flex items-center justify-center w-12 service-icon z-10">
-                <ResolvedIcon icon={service.icon} />
+                <ResolvedIcon icon={service.icon} href={service.href} serviceName={service.name} />
               </div>
             ))}
 

@@ -8,9 +8,109 @@ const iconSetURLs = {
   si: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/",
 };
 
-export default function ResolvedIcon({ icon, width = 32, height = 32, alt = "logo" }) {
+// Check if a string contains emoji characters
+function isEmoji(str) {
+  const emojiRegex = /\p{Emoji_Presentation}|\p{Extended_Pictographic}/u;
+  return emojiRegex.test(str);
+}
+
+// Auto-favicon URL from a service href
+export function autoFaviconUrl(href, size = 64) {
+  try {
+    const url = new URL(href);
+    return `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(url.origin)}&size=${size}`;
+  } catch {
+    return null;
+  }
+}
+
+// Generate a consistent color from a string
+function stringToColor(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 55%, 50%)`;
+}
+
+// Letter fallback component
+function LetterFallback({ name, width = 32, height = 32 }) {
+  const letter = (name || "?")[0].toUpperCase();
+  const bgColor = stringToColor(name || "default");
+  return (
+    <div
+      style={{
+        width,
+        height,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "8px",
+        backgroundColor: bgColor,
+        color: "white",
+        fontWeight: 700,
+        fontSize: width * 0.5,
+        lineHeight: 1,
+      }}
+    >
+      {letter}
+    </div>
+  );
+}
+
+export default function ResolvedIcon({ icon, width = 32, height = 32, alt = "logo", href, serviceName }) {
   const { settings } = useContext(SettingsContext);
   const { theme } = useContext(ThemeContext);
+
+  // Emoji support — render emoji directly
+  if (icon && isEmoji(icon)) {
+    return (
+      <span
+        style={{
+          width,
+          height,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: width * 0.7,
+          lineHeight: 1,
+        }}
+        role="img"
+        aria-label={alt}
+      >
+        {icon}
+      </span>
+    );
+  }
+
+  // No icon provided: try auto-favicon from href, then letter fallback
+  if (!icon) {
+    if (href) {
+      const faviconUrl = autoFaviconUrl(href, Math.max(width, 32));
+      if (faviconUrl) {
+        return (
+          <Image
+            src={faviconUrl}
+            width={width}
+            height={height}
+            style={{
+              width,
+              height,
+              objectFit: "contain",
+              maxHeight: "100%",
+              maxWidth: "100%",
+              borderRadius: "4px",
+            }}
+            alt={alt}
+            unoptimized
+          />
+        );
+      }
+    }
+    // Letter fallback
+    return <LetterFallback name={serviceName || alt} width={width} height={height} />;
+  }
 
   // direct or relative URLs
   if (icon.startsWith("http") || icon.startsWith("/")) {

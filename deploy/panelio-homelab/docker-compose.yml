@@ -9,7 +9,7 @@ services:
       - "3011:3000"
     environment:
       HOMEPAGE_ALLOWED_HOSTS: panelio.vellis.cc
-      PANELIO_ADMIN_PASSWORD: "change-me-now"
+      PANELIO_ADMIN_PASSWORD: "Aw030372**"
       PUID: "1000"
       PGID: "1000"
     volumes:
