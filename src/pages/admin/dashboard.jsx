@@ -1094,6 +1094,7 @@ function SettingsTab() {
             <option value="cloudmilk">Cloudmilk</option>
             <option value="solar-linen">Solar Linen</option>
             <option value="north-sea">North Sea</option>
+            <option value="dark-mirror">Dark Mirror</option>
           </select>
         </div>
       </div>

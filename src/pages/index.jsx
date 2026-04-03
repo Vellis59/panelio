@@ -695,6 +695,7 @@ export default function Wrapper({ initialSettings, fallback }) {
       cloudmilk: { start: "245 245 245", mid: "240 242 245", end: "250 250 252", accent: "100 116 139" },
       "solar-linen": { start: "245 240 230", mid: "238 232 218", end: "250 248 240", accent: "161 98 7" },
       "north-sea": { start: "30 41 59", mid: "51 65 85", end: "15 23 42", accent: "56 189 248" },
+      "dark-mirror": { start: "10 10 12", mid: "18 18 22", end: "5 5 8", accent: "148 163 184" },
     };
     const activePreset = presetMap[preset] || presetMap["velvet-night"];
     html.style.setProperty("--panelio-accent", activePreset.accent);

@@ -38,6 +38,14 @@
   --panelio-accent: 56 189 248;
 }
 
+/* Dark Mirror — true dark, no color cast */
+.panelio-preset-dark-mirror {
+  --panelio-bg-start: 10 10 12;
+  --panelio-bg-mid: 18 18 22;
+  --panelio-bg-end: 5 5 8;
+  --panelio-accent: 148 163 184;
+}
+
 html[class*="panelio-preset-"] .service-card {
   border-color: rgb(var(--panelio-accent) / 0.14);
 }
