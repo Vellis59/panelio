@@ -619,6 +619,17 @@ export default function Wrapper({ initialSettings, fallback }) {
   const { theme } = useContext(ThemeContext);
   const { color } = useContext(ColorContext);
   const { settings } = useContext(SettingsContext);
+  const [livePreset, setLivePreset] = useState(null);
+
+  // Fetch live preset on mount
+  useEffect(() => {
+    fetch("/api/panelio-settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.panelioThemePreset) setLivePreset(data.panelioThemePreset);
+      })
+      .catch(() => {});
+  }, []);
   let backgroundImage = "";
   let opacity = initialSettings?.backgroundOpacity ?? 0;
   let backgroundBlur = false;
@@ -642,6 +653,7 @@ export default function Wrapper({ initialSettings, fallback }) {
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
+    const pageWrapper = document.getElementById("page_wrapper");
 
     html.classList.remove("dark", "scheme-dark", "scheme-light");
     html.classList.toggle("dark", theme === "dark");
@@ -658,7 +670,7 @@ export default function Wrapper({ initialSettings, fallback }) {
       html.classList.add(desiredThemeClass);
     }
 
-    const preset = settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
+    const preset = livePreset || settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
     const desiredPresetClass = `panelio-preset-${preset}`;
     const presetClassesToRemove = Array.from(html.classList).filter(
       (cls) => cls.startsWith("panelio-preset-") && cls !== desiredPresetClass,
@@ -679,10 +691,14 @@ export default function Wrapper({ initialSettings, fallback }) {
     };
     const activePreset = presetMap[preset] || presetMap["velvet-night"];
     html.style.setProperty("--panelio-accent", activePreset.accent);
-    body.style.backgroundImage = `radial-gradient(circle at top left, rgb(${activePreset.accent} / 0.16), transparent 28%), linear-gradient(135deg, rgb(${activePreset.start}) 0%, rgb(${activePreset.mid}) 45%, rgb(${activePreset.end}) 100%)`;
-    body.style.backgroundAttachment = "fixed";
-    body.style.backgroundColor = `rgb(${activePreset.end})`;
-  }, [backgroundImage, opacity, theme, color, initialSettings.color, settings?.color, settings?.panelioThemePreset]);
+
+    // Apply preset gradient to page wrapper (covers the full page)
+    if (pageWrapper) {
+      pageWrapper.style.backgroundImage = `radial-gradient(circle at top left, rgb(${activePreset.accent} / 0.16), transparent 28%), linear-gradient(135deg, rgb(${activePreset.start}) 0%, rgb(${activePreset.mid}) 45%, rgb(${activePreset.end}) 100%)`;
+      pageWrapper.style.backgroundAttachment = "fixed";
+      pageWrapper.style.backgroundColor = `rgb(${activePreset.end})`;
+    }
+  }, [backgroundImage, opacity, theme, color, initialSettings.color, settings?.color, livePreset]);
 
   return (
     <>
