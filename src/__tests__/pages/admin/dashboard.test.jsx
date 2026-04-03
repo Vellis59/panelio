@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { normalizeUserUrl } from "./dashboard.jsx";
+import { normalizeUserUrl } from "pages/admin/dashboard.jsx";
 
 describe("pages/admin/dashboard normalizeUserUrl", () => {
   it("adds https:// to plain domains", () => {
