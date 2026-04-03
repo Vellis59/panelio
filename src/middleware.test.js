@@ -26,6 +26,7 @@ describe("middleware", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env = { ...originalEnv };
+    delete process.env.HOMEPAGE_ALLOWED_HOSTS;
     console.error = originalConsoleError;
   });
 
@@ -37,7 +38,7 @@ describe("middleware", () => {
     expect(res).toEqual({ type: "next" });
   });
 
-  it("blocks requests when host is not allowed", () => {
+  it("blocks requests when host is not allowed with actionable details", () => {
     process.env.PORT = "3000";
     const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -45,7 +46,14 @@ describe("middleware", () => {
 
     expect(errSpy).toHaveBeenCalled();
     expect(NextResponse.json).toHaveBeenCalledWith(
-      { error: "Host validation failed. See logs for more details." },
+      {
+        error: "Host validation failed.",
+        message: 'This request used the host "evil.com", but it is not currently allowed.',
+        hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS, or use * only if you fully trust the deployment environment.",
+        suggestedEnv: "HOMEPAGE_ALLOWED_HOSTS=evil.com",
+        allowedHosts: ["localhost:3000", "127.0.0.1:3000", "[::1]:3000"],
+        docs: "/docs/installation/#homepage_allowed_hosts",
+      },
       { status: 400 },
     );
     expect(res.type).toBe("json");
@@ -65,6 +73,24 @@ describe("middleware", () => {
     process.env.HOMEPAGE_ALLOWED_HOSTS = "example.com:3000,other:3000";
 
     const res = middleware(createReq("example.com:3000"));
+
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ type: "next" });
+  });
+
+  it("allows requests when the configured host omits default port 80", () => {
+    process.env.HOMEPAGE_ALLOWED_HOSTS = "panelio.vellis.cc";
+
+    const res = middleware(createReq("panelio.vellis.cc:80"));
+
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ type: "next" });
+  });
+
+  it("allows requests when the configured host omits default port 443", () => {
+    process.env.HOMEPAGE_ALLOWED_HOSTS = "panelio.vellis.cc";
+
+    const res = middleware(createReq("panelio.vellis.cc:443"));
 
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ type: "next" });

@@ -35,6 +35,8 @@ The value is a comma-separated (no spaces) list of allowed hosts (sometimes with
 
 `localhost:3000` and `127.0.0.1:3000` are always included, but you can add a domain or IP address to this list to allow that host such as `HOMEPAGE_ALLOWED_HOSTS=gethomepage.dev,192.168.1.2:1234`, etc.
 
-If you are seeing errors about host validation, check the homepage logs and ensure that the host exactly as output in the logs is in the `HOMEPAGE_ALLOWED_HOSTS` list.
+If you are seeing host validation errors, check the exact host shown in the error payload or logs and ensure that it is present in the `HOMEPAGE_ALLOWED_HOSTS` list.
+
+Panelio also tolerates default port normalization for common cases. For example, if you allow `panelio.example.com`, requests arriving as `panelio.example.com:80` or `panelio.example.com:443` can still be accepted.
 
 This can be disabled by setting `HOMEPAGE_ALLOWED_HOSTS` to `*` but this is not recommended. Public deployments must rely on a reverse proxy (and/or VPN) that enforces authentication, TLS, and unexpected Host headers; the built-in host check is a best-effort guard for local setups and is not a substitute for edge protections.
