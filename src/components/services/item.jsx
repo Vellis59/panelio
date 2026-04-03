@@ -29,7 +29,9 @@ export default function Item({ service, groupName, useEqualHeights }) {
   const showStatusDot = settings?.panelioShowStatusDot === true;
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [menuAbove, setMenuAbove] = useState(false);
   const menuRef = useRef(null);
+  const menuBtnRef = useRef(null);
 
   const togglePin = async (e) => {
     e.preventDefault();
@@ -69,6 +71,13 @@ export default function Item({ service, groupName, useEqualHeights }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
+  // Detect menu direction when opening
+  useEffect(() => {
+    if (!menuOpen || !menuBtnRef.current) return;
+    const rect = menuBtnRef.current.getBoundingClientRect();
+    setMenuAbove(rect.bottom + 160 > window.innerHeight);
+  }, [menuOpen]);
+
   // set stats to closed after 300ms
   const closeStats = () => {
     if (statsOpen) {
@@ -98,13 +107,14 @@ export default function Item({ service, groupName, useEqualHeights }) {
             type="button"
             onClick={togglePin}
             className={classNames(
-              "absolute z-20 text-sm transition-all rounded-full px-1 py-0.5 backdrop-blur-sm",
-              isPanelioStyle ? "top-2 left-2" : "top-1 left-1",
+              "absolute z-30 text-sm transition-all rounded-full backdrop-blur-sm",
+              isPanelioStyle ? "top-1 left-1 w-8 h-8 flex items-center justify-center" : "top-1 left-1 px-1 py-0.5",
               isPinned
-                ? "opacity-100 bg-amber-500/20"
-                : "opacity-35 group-hover:opacity-100 bg-black/20 hover:bg-black/35 dark:bg-white/10 dark:hover:bg-white/20",
+                ? "opacity-100 bg-amber-500/30"
+                : "opacity-0 group-hover:opacity-100 bg-black/25 hover:bg-black/40 dark:bg-white/15 dark:hover:bg-white/25",
             )}
             title={isPinned ? "Unpin" : "Pin to top"}
+            style={{ cursor: "pointer" }}
           >
             <span className={isPinned ? "text-amber-400" : "text-theme-400 dark:text-theme-500"}>{isPinned ? String.fromCharCode(9733) : String.fromCharCode(9734)}</span>
           </button>
@@ -210,9 +220,10 @@ export default function Item({ service, groupName, useEqualHeights }) {
               <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" title="Online" />
             )}
             <button
+              ref={menuBtnRef}
               type="button"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMenuOpen(!menuOpen); }}
-              className="opacity-0 group-hover:opacity-100 transition-opacity text-theme-400 dark:text-theme-500 hover:text-theme-600 dark:hover:text-theme-300 text-lg leading-none"
+              className="opacity-0 group-hover:opacity-100 transition-opacity text-theme-400 dark:text-theme-500 hover:text-theme-600 dark:hover:text-theme-300 text-lg leading-none w-7 h-7 flex items-center justify-center rounded-md hover:bg-black/10 dark:hover:bg-white/10"
               title="Quick actions"
             >
               {String.fromCharCode(8942)}
@@ -222,7 +233,10 @@ export default function Item({ service, groupName, useEqualHeights }) {
         {menuOpen && isPanelioStyle && (
           <div
             ref={menuRef}
-            className="absolute top-8 right-2 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+            className={classNames(
+              "absolute right-2 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]",
+              menuAbove ? "bottom-10" : "top-8",
+            )}
             onClick={(e) => e.stopPropagation()}
           >
             {service.href && (

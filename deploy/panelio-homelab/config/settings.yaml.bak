@@ -12,10 +12,6 @@ panelioShowClock: true
 panelioGreetingName: Vellis
 panelioPinned:
   - Monitoring::Uptime Kuma
-  - Networking::Technitium
-  - Monitoring::Grafana
-  - Monitoring::Dozzle
   - Networking::Pi-hole
-  - Monitoring::Prometheus
-panelioCardStyle: classic
+panelioCardStyle: panelio
 panelioThemePreset: dark-mirror
