@@ -136,6 +136,21 @@ export const servicesOps = {
     await writeConfig("services.yaml", groups);
     return groups;
   },
+
+  async renameGroup(oldName, newName) {
+    const groups = await this.list();
+    const group = groups.find((g) => Object.keys(g)[0] === oldName);
+    if (!group) throw new Error(`Group "${oldName}" not found`);
+    if (groups.find((g) => Object.keys(g)[0] === newName)) {
+      throw new Error(`Group "${newName}" already exists`);
+    }
+
+    const index = groups.indexOf(group);
+    const items = group[oldName];
+    groups[index] = { [newName]: items };
+    await writeConfig("services.yaml", groups);
+    return groups;
+  },
 };
 
 /**
@@ -208,6 +223,21 @@ export const bookmarksOps = {
   async removeGroup(groupName) {
     let groups = await this.list();
     groups = groups.filter((g) => Object.keys(g)[0] !== groupName);
+    await writeConfig("bookmarks.yaml", groups);
+    return groups;
+  },
+
+  async renameGroup(oldName, newName) {
+    const groups = await this.list();
+    const group = groups.find((g) => Object.keys(g)[0] === oldName);
+    if (!group) throw new Error(`Group "${oldName}" not found`);
+    if (groups.find((g) => Object.keys(g)[0] === newName)) {
+      throw new Error(`Group "${newName}" already exists`);
+    }
+
+    const index = groups.indexOf(group);
+    const items = group[oldName];
+    groups[index] = { [newName]: items };
     await writeConfig("bookmarks.yaml", groups);
     return groups;
   },

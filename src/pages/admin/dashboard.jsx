@@ -108,6 +108,8 @@ export default function AdminDashboard() {
   const [editingBookmark, setEditingBookmark] = useState(null);
   const [addingBookmark, setAddingBookmark] = useState(null);
   const [newGroupName, setNewGroupName] = useState("");
+  const [renamingServiceGroup, setRenamingServiceGroup] = useState(null);
+  const [renamingBookmarkGroup, setRenamingBookmarkGroup] = useState(null);
 
   const fetchServices = useCallback(async () => {
     const res = await fetch("/api/admin/services");
@@ -154,6 +156,21 @@ export default function AdminDashboard() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "removeGroup", group: name }),
     });
+    fetchServices();
+  };
+
+  const renameServiceGroup = async (oldName, newName) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) {
+      setRenamingServiceGroup(null);
+      return;
+    }
+    await fetch("/api/admin/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "renameGroup", oldGroup: oldName, newGroup: trimmed }),
+    });
+    setRenamingServiceGroup(null);
     fetchServices();
   };
 
@@ -206,6 +223,21 @@ export default function AdminDashboard() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "removeGroup", group: name }),
     });
+    fetchBookmarks();
+  };
+
+  const renameBookmarkGroup = async (oldName, newName) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) {
+      setRenamingBookmarkGroup(null);
+      return;
+    }
+    await fetch("/api/admin/bookmarks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "renameGroup", oldGroup: oldName, newGroup: trimmed }),
+    });
+    setRenamingBookmarkGroup(null);
     fetchBookmarks();
   };
 
@@ -343,7 +375,33 @@ export default function AdminDashboard() {
               return (
                 <div key={groupName} className="mb-4 bg-white dark:bg-gray-800 rounded-lg shadow">
                   <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
-                    <h3 className="font-semibold text-gray-800 dark:text-gray-100">{groupName}</h3>
+                    {renamingServiceGroup?.oldName === groupName ? (
+                      <div className="flex items-center gap-2 flex-1 mr-4">
+                        <input
+                          autoFocus
+                          defaultValue={groupName}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") renameServiceGroup(groupName, e.currentTarget.value);
+                            if (e.key === "Escape") setRenamingServiceGroup(null);
+                          }}
+                          className="px-3 py-1.5 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
+                        />
+                        <button
+                          onClick={(e) => renameServiceGroup(groupName, e.currentTarget.parentElement.querySelector("input")?.value || groupName)}
+                          className="text-xs px-2 py-1 bg-blue-600 text-white rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setRenamingServiceGroup(null)}
+                          className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <h3 className="font-semibold text-gray-800 dark:text-gray-100">{groupName}</h3>
+                    )}
                     <div className="flex gap-1 items-center">
                       <button onClick={async () => {
                         const gIdx = services.findIndex((g) => Object.keys(g)[0] === groupName);
@@ -364,6 +422,10 @@ export default function AdminDashboard() {
                       }} disabled={services.findIndex((g) => Object.keys(g)[0] === groupName) === services.length - 1}
                         className="text-xs px-1 py-1 text-gray-400 hover:text-blue-500 disabled:opacity-20">↓</button>
                       <span className="mx-1">|</span>
+                      <button onClick={() => setRenamingServiceGroup({ oldName: groupName })}
+                        className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded dark:bg-amber-900 dark:text-amber-300">
+                        Rename
+                      </button>
                       <button onClick={() => setAddingService(groupName)}
                         className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded dark:bg-blue-900 dark:text-blue-300">
                         + Service
@@ -452,8 +514,38 @@ export default function AdminDashboard() {
               return (
                 <div key={groupName} className="mb-4 bg-white dark:bg-gray-800 rounded-lg shadow">
                   <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
-                    <h3 className="font-semibold text-gray-800 dark:text-gray-100">{groupName}</h3>
+                    {renamingBookmarkGroup?.oldName === groupName ? (
+                      <div className="flex items-center gap-2 flex-1 mr-4">
+                        <input
+                          autoFocus
+                          defaultValue={groupName}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") renameBookmarkGroup(groupName, e.currentTarget.value);
+                            if (e.key === "Escape") setRenamingBookmarkGroup(null);
+                          }}
+                          className="px-3 py-1.5 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
+                        />
+                        <button
+                          onClick={(e) => renameBookmarkGroup(groupName, e.currentTarget.parentElement.querySelector("input")?.value || groupName)}
+                          className="text-xs px-2 py-1 bg-blue-600 text-white rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setRenamingBookmarkGroup(null)}
+                          className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-600 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <h3 className="font-semibold text-gray-800 dark:text-gray-100">{groupName}</h3>
+                    )}
                     <div className="flex gap-2">
+                      <button onClick={() => setRenamingBookmarkGroup({ oldName: groupName })}
+                        className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded dark:bg-amber-900 dark:text-amber-300">
+                        Rename
+                      </button>
                       <button onClick={() => setAddingBookmark(groupName)}
                         className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded dark:bg-blue-900 dark:text-blue-300">
                         + Bookmark

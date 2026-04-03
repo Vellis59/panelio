@@ -33,6 +33,13 @@ export default async function handler(req, res) {
           return res.status(200).json(result);
         }
 
+        if (action === "renameGroup") {
+          const { oldGroup, newGroup } = req.body;
+          if (!oldGroup || !newGroup) return res.status(400).json({ error: "Missing old or new group name" });
+          const result = await bookmarksOps.renameGroup(oldGroup, newGroup);
+          return res.status(200).json(result);
+        }
+
         // Default: add bookmark
         if (!group || !bookmark) {
           return res.status(400).json({ error: "Missing group or bookmark" });
