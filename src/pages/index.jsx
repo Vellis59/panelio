@@ -650,6 +650,18 @@ export default function Wrapper({ initialSettings, fallback }) {
       html.classList.add(desiredThemeClass);
     }
 
+    const preset = initialSettings?.panelioThemePreset || "velvet-night";
+    const desiredPresetClass = `panelio-preset-${preset}`;
+    const presetClassesToRemove = Array.from(html.classList).filter(
+      (cls) => cls.startsWith("panelio-preset-") && cls !== desiredPresetClass,
+    );
+    if (presetClassesToRemove.length) {
+      html.classList.remove(...presetClassesToRemove);
+    }
+    if (!html.classList.contains(desiredPresetClass)) {
+      html.classList.add(desiredPresetClass);
+    }
+
     // Remove any previously applied inline styles
     body.style.backgroundImage = "";
     body.style.backgroundColor = "";

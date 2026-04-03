@@ -14,4 +14,5 @@ panelioPinned:
   - Monitoring::Uptime Kuma
   - Networking::Technitium
   - Monitoring::Grafana
-  - Media::Sonarr
+  - Monitoring::Dozzle
+panelioCardStyle: panelio

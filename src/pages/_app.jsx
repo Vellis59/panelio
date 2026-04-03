@@ -4,6 +4,7 @@ import Head from "next/head";
 import "styles/globals.css";
 import "styles/manrope.css";
 import "styles/theme.css";
+import "styles/panelio-presets.css";
 import { SWRConfig } from "swr";
 import { ColorProvider } from "utils/contexts/color";
 import { SettingsProvider } from "utils/contexts/settings";

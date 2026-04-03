@@ -1,0 +1,62 @@
+.panelio-preset-velvet-night {
+  --panelio-bg-start: 21 15 44;
+  --panelio-bg-mid: 31 41 88;
+  --panelio-bg-end: 15 23 42;
+  --panelio-accent: 139 92 246;
+}
+
+.panelio-preset-ember-grid {
+  --panelio-bg-start: 28 25 23;
+  --panelio-bg-mid: 68 36 18;
+  --panelio-bg-end: 17 24 39;
+  --panelio-accent: 249 115 22;
+}
+
+.panelio-preset-cloudmilk {
+  --panelio-bg-start: 248 250 252;
+  --panelio-bg-mid: 239 246 255;
+  --panelio-bg-end: 255 255 255;
+  --panelio-accent: 96 165 250;
+}
+
+.panelio-preset-solar-linen {
+  --panelio-bg-start: 255 251 235;
+  --panelio-bg-mid: 250 245 230;
+  --panelio-bg-end: 255 255 250;
+  --panelio-accent: 217 119 6;
+}
+
+.panelio-preset-north-sea {
+  --panelio-bg-start: 226 232 240;
+  --panelio-bg-mid: 203 213 225;
+  --panelio-bg-end: 241 245 249;
+  --panelio-accent: 14 116 144;
+}
+
+html[class*="panelio-preset-"] body {
+  background-image:
+    radial-gradient(circle at top left, rgb(var(--panelio-accent) / 0.16), transparent 28%),
+    linear-gradient(135deg, rgb(var(--panelio-bg-start)) 0%, rgb(var(--panelio-bg-mid)) 45%, rgb(var(--panelio-bg-end)) 100%);
+  background-attachment: fixed;
+}
+
+html.dark[class*="panelio-preset-"] body {
+  background-image:
+    radial-gradient(circle at top left, rgb(var(--panelio-accent) / 0.18), transparent 28%),
+    linear-gradient(135deg, rgb(var(--panelio-bg-start)) 0%, rgb(var(--panelio-bg-mid)) 45%, rgb(var(--panelio-bg-end)) 100%);
+}
+
+html[class*="panelio-preset-"] .service-card {
+  border-color: rgb(var(--panelio-accent) / 0.14);
+}
+
+html[class*="panelio-preset-"] .service-card:hover {
+  box-shadow: 0 16px 40px rgb(var(--panelio-accent) / 0.16);
+}
+
+html[class*="panelio-preset-"] #information-widgets,
+html[class*="panelio-preset-"] #footer,
+html[class*="panelio-preset-"] .bg-white.dark\:bg-gray-800.rounded-lg.shadow,
+html[class*="panelio-preset-"] .rounded-xl.border.border-white\/10 {
+  box-shadow: 0 12px 30px rgb(var(--panelio-accent) / 0.08);
+}

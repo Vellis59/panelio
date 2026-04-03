@@ -949,6 +949,7 @@ function SettingsTab() {
   const [showGreeting, setShowGreeting] = useState(true);
   const [showClock, setShowClock] = useState(true);
   const [cardStyle, setCardStyle] = useState("panelio");
+  const [themePreset, setThemePreset] = useState("velvet-night");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -967,6 +968,7 @@ function SettingsTab() {
         setShowGreeting(data.panelioShowGreeting !== false);
         setShowClock(data.panelioShowClock !== false);
         setCardStyle(data.panelioCardStyle || "panelio");
+        setThemePreset(data.panelioThemePreset || "velvet-night");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -989,6 +991,7 @@ function SettingsTab() {
       updates.panelioShowGreeting = showGreeting;
       updates.panelioShowClock = showClock;
       updates.panelioCardStyle = cardStyle;
+      updates.panelioThemePreset = themePreset;
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -1072,6 +1075,25 @@ function SettingsTab() {
           >
             <option value="panelio">Panelio — Soft Glass</option>
             <option value="classic">Classic — Current style</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
+        <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">🎨 Panelio Theme Preset</h3>
+        <p className="text-xs text-gray-400 mb-3">Choose the global visual atmosphere for the Panelio style.</p>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Theme preset</label>
+          <select
+            value={themePreset}
+            onChange={(e) => setThemePreset(e.target.value)}
+            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+          >
+            <option value="velvet-night">Velvet Night</option>
+            <option value="ember-grid">Ember Grid</option>
+            <option value="cloudmilk">Cloudmilk</option>
+            <option value="solar-linen">Solar Linen</option>
+            <option value="north-sea">North Sea</option>
           </select>
         </div>
       </div>
