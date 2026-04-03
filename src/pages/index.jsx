@@ -85,12 +85,6 @@ function PanelioOverview({ services, bookmarks, widgets, cardBlur }) {
             >
               Open Admin
             </a>
-            <a
-              href="/admin"
-              className="inline-flex items-center rounded-lg border border-white/10 px-4 py-2 text-sm font-medium text-theme-900 dark:text-theme-50 hover:bg-white/5 transition"
-            >
-              Manage Content
-            </a>
           </div>
         </div>
 
@@ -520,8 +514,6 @@ function Home({ initialSettings }) {
           setSearching={setSearching}
         />
 
-        <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} />
-
         <div
           id="information-widgets"
           className={classNames(
@@ -566,6 +558,8 @@ function Home({ initialSettings }) {
             )}
           </div>
         </div>
+
+        <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} />
 
         {servicesAndBookmarksGroups}
 
