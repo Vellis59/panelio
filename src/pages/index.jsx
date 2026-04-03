@@ -2,6 +2,7 @@
 import classNames from "classnames";
 import BookmarksGroup from "components/bookmarks/group";
 import ErrorBoundary from "components/errorboundry";
+import PanelioHostDiagnostic from "components/panelio-host-diagnostic";
 import QuickLaunch from "components/quicklaunch";
 import ServicesGroup from "components/services/group";
 import Tab, { slugifyAndEncode } from "components/tab";
@@ -98,7 +99,7 @@ function Index({ initialSettings, fallback }) {
   const windowFocused = useWindowFocus();
   const [stale, setStale] = useState(false);
   const { data: errorsData } = useSWR("/api/validate");
-  const { error: validateError } = errorsData || {};
+  const validateError = Array.isArray(errorsData) ? null : errorsData?.error ? errorsData : null;
   const { data: hashData, mutate: mutateHash } = useSWR("/api/hash");
 
   useEffect(() => {
@@ -131,6 +132,10 @@ function Index({ initialSettings, fallback }) {
   }, [hashData]);
 
   if (validateError) {
+    if (validateError?.error === "Host validation failed.") {
+      return <PanelioHostDiagnostic error={validateError} />;
+    }
+
     return (
       <div className="w-full h-screen container m-auto justify-center p-10 pointer-events-none">
         <div className="flex flex-col">
@@ -140,7 +145,7 @@ function Index({ initialSettings, fallback }) {
               Error
             </div>
             <div className="p-2 text-theme-100 dark:text-theme-200">
-              <pre className="opacity-50 font-bold pb-2">{validateError}</pre>
+              <pre className="opacity-50 font-bold pb-2">{typeof validateError === "string" ? validateError : JSON.stringify(validateError, null, 2)}</pre>
             </div>
           </div>
         </div>

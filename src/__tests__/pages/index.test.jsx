@@ -155,6 +155,10 @@ vi.mock("components/quicklaunch", () => ({
   },
 }));
 
+vi.mock("components/panelio-host-diagnostic", () => ({
+  default: ({ error }) => <div data-testid="host-diagnostic">{error?.message}</div>,
+}));
+
 vi.mock("components/widgets/widget", () => ({
   default: ({ widget, style }) => {
     state.widgetCalls.push({ widget, style });
@@ -314,13 +318,28 @@ describe("pages/index Index routing + SWR branches", () => {
     state.widgetsData = [];
   });
 
-  it("renders the validation error screen when /api/validate returns an error", async () => {
+  it("renders the validation error screen when /api/validate returns a generic error", async () => {
     state.validateData = { error: "bad config" };
 
     await renderIndex({ initialSettings: { title: "Homepage", layout: {} }, settings: { layout: {} } });
 
     expect(screen.getByText("Error")).toBeInTheDocument();
-    expect(screen.getByText("bad config")).toBeInTheDocument();
+    expect(screen.getByText(/bad config/)).toBeInTheDocument();
+  });
+
+  it("renders the host diagnostic flow when /api/validate returns a host validation error", async () => {
+    state.validateData = {
+      error: "Host validation failed.",
+      message: 'This request used the host "panelio.vellis.cc", but it is not currently allowed.',
+      hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS.",
+      suggestedEnv: "HOMEPAGE_ALLOWED_HOSTS=panelio.vellis.cc",
+      allowedHosts: ["localhost:3000"],
+    };
+
+    await renderIndex({ initialSettings: { title: "Homepage", layout: {} }, settings: { layout: {} } });
+
+    expect(screen.getByTestId("host-diagnostic")).toBeInTheDocument();
+    expect(screen.getByText(/panelio\.vellis\.cc/)).toBeInTheDocument();
   });
 
   it("renders config errors when /api/validate returns a list of errors", async () => {
