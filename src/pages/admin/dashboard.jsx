@@ -137,17 +137,28 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
         {subItems.map((svc, idx) => {
           const svcName = Object.keys(svc)[0];
           const svcData = svc[svcName];
+          const isEditing = editingService?.group === groupName && editingService?.index === idx && editingService?.subgroup === subgroupName;
           return (
-            <div key={idx} className="flex items-center justify-between py-1.5 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
-              <div>
-                <span className="font-medium text-gray-700 dark:text-gray-200 text-sm">{svcName}</span>
-                {svcData.description && <span className="text-gray-400 text-xs ml-2">{svcData.description}</span>}
-              </div>
-              <div className="flex items-center gap-1">
-                {svcData.href && <a href={svcData.href} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">{svcData.href}</a>}
-                <button onClick={() => setEditingService({ group: groupName, index: idx, subgroup: subgroupName })} className="text-xs px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded dark:bg-amber-900 dark:text-amber-300">Edit</button>
-                <button onClick={() => deleteService(groupName, svcName, subgroupName)} className="text-xs px-1.5 py-0.5 bg-red-50 text-red-600 rounded dark:bg-red-900 dark:text-red-300">Del</button>
-              </div>
+            <div key={idx}>
+              {isEditing ? (
+                <ServiceForm
+                  service={svc}
+                  onSave={(data) => { updateService(groupName, svcName, data, subgroupName); setEditingService(null); }}
+                  onCancel={() => setEditingService(null)}
+                />
+              ) : (
+                <div className="flex items-center justify-between py-1.5 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
+                  <div>
+                    <span className="font-medium text-gray-700 dark:text-gray-200 text-sm">{svcName}</span>
+                    {svcData.description && <span className="text-gray-400 text-xs ml-2">{svcData.description}</span>}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {svcData.href && <a href={svcData.href} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">{svcData.href}</a>}
+                    <button onClick={() => setEditingService({ group: groupName, index: idx, subgroup: subgroupName })} className="text-xs px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded dark:bg-amber-900 dark:text-amber-300">Edit</button>
+                    <button onClick={() => deleteService(groupName, svcName, subgroupName)} className="text-xs px-1.5 py-0.5 bg-red-50 text-red-600 rounded dark:bg-red-900 dark:text-red-300">Del</button>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}

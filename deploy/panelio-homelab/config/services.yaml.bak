@@ -1,8 +1,9 @@
 - Infrastructure:
     - Proxmox:
-        href: https://proxmox.vellis.cc
+        href: https://www.proxmox.com/en/
         description: Virtualization host
-        icon: si-proxmox
+        icon: ""
+        ping: ""
     - Portainer:
         href: https://portainer.vellis.cc
         description: Container management
@@ -19,19 +20,13 @@
         href: https://watchtower.vellis.cc
         description: Container updates
         icon: si-docker
-    - Registra:
+    - Registrar:
         - OVH:
             href: https://ovh.com
             description: Domain registrar
         - Namecheap:
             href: https://namecheap.com
             description: Alt registrar
-        - test:
-            name: test
-            href: https://vellis.cc
-            description: ""
-            icon: ""
-            ping: ""
     - DNS Tools:
         - Test5:
             name: Test5
@@ -39,18 +34,12 @@
             description: ""
             icon: ""
             ping: ""
-    - test 5:
-        - Vellis:
-            name: Vellis
-            href: https://Vellis.fr
-            description: ""
-            icon: ""
-            ping: ""
 - Monitoring:
     - Uptime Kuma:
         href: https://uptime-kuma.vellis.cc
         description: Status pages and monitoring
-        icon: si-uptimekuma
+        icon: ""
+        ping: ""
     - Grafana:
         href: https://grafana.vellis.cc
         description: Dashboards and metrics
@@ -79,7 +68,8 @@
     - Cloudflare:
         href: https://dash.cloudflare.com
         description: DNS and edge
-        icon: si-cloudflare
+        icon: ""
+        ping: ""
     - Router:
         href: https://router.vellis.cc
         description: Gateway and LAN settings
@@ -176,7 +166,8 @@
     - n8n:
         href: https://n8n.infodeal.fr
         description: Workflow automation
-        icon: si-n8n
+        icon: ""
+        ping: ""
     - Flowise:
         href: https://flowise.infodeal.fr
         description: LLM flow builder
