@@ -183,7 +183,8 @@
     - AgentMail:
         href: https://agentmail.to
         description: Agent-first email
-        icon: mdi-email-fast-outline
+        icon: ""
+        ping: ""
 - Domains:
     - Registrar:
         href: https://registrar.vellis.cc

@@ -42,12 +42,16 @@ const Version = dynamic(() => import("components/version"), {
 
 const rightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime"];
 
-function PanelioOverview({ services, bookmarks, widgets, cardBlur }) {
+function PanelioOverview({ services, bookmarks, widgets, cardBlur, settings }) {
   const serviceGroups = services?.length || 0;
   const serviceCount = services?.reduce((sum, group) => sum + (group.services?.length || 0), 0) || 0;
   const bookmarkGroups = bookmarks?.length || 0;
   const bookmarkCount = bookmarks?.reduce((sum, group) => sum + (group.bookmarks?.length || 0), 0) || 0;
   const widgetCount = widgets?.length || 0;
+
+  const title = settings?.panelioOverviewTitle || "Panelio Overview";
+  const subtitle = settings?.panelioOverviewSubtitle || "Your dashboard at a glance";
+  const description = settings?.panelioOverviewDescription || `Panelio is currently managing ${serviceCount} service${serviceCount === 1 ? "" : "s"} across ${serviceGroups} group${serviceGroups === 1 ? "" : "s"}.`;
 
   const cards = [
     { label: "Service groups", value: serviceGroups },
@@ -68,13 +72,13 @@ function PanelioOverview({ services, bookmarks, widgets, cardBlur }) {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="text-xs uppercase tracking-[0.2em] text-theme-800/70 dark:text-theme-200/60 mb-2">
-              Panelio Overview
+              {title}
             </div>
             <h2 className="text-xl sm:text-2xl font-semibold text-theme-900 dark:text-theme-50">
-              Your dashboard at a glance
+              {subtitle}
             </h2>
             <p className="text-sm sm:text-base text-theme-800/70 dark:text-theme-200/70 mt-1 max-w-2xl">
-              Panelio is currently managing {serviceCount} service{serviceCount === 1 ? "" : "s"} across {serviceGroups} group{serviceGroups === 1 ? "" : "s"}.
+              {description}
             </p>
           </div>
 
@@ -559,7 +563,7 @@ function Home({ initialSettings }) {
           </div>
         </div>
 
-        <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} />
+        <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} settings={settings} />
 
         {servicesAndBookmarksGroups}
 

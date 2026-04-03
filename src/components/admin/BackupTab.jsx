@@ -7,22 +7,16 @@ export default function BackupTab() {
   const [error, setError] = useState("");
 
   const handleExport = () => {
-    // Need to pass auth cookie - browser will do it automatically
-    const token =
-      document.cookie.match(/panelio_admin_token=([^;]+)/)?.[1] ||
-      document.cookie.match(/homepage_admin_token=([^;]+)/)?.[1];
-    if (!token) return;
-    
-    // Fetch and trigger download
-    fetch("/api/admin/export", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.blob())
+    fetch("/api/admin/export", { credentials: "same-origin" })
+      .then((r) => {
+        if (!r.ok) throw new Error("Export failed: " + r.status);
+        return r.blob();
+      })
       .then((blob) => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `homepage-config-${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `panelio-config-${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
       })

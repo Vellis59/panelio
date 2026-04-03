@@ -783,7 +783,7 @@ const WIDGET_TYPES = [
 ];
 
 function WidgetForm({ widget, index, onSave, onCancel }) {
-  const isEdit = widget !== null;
+  const isEdit = widget != null;
   const existingType = isEdit ? Object.keys(widget)[0] : "";
   const existingOpts = isEdit ? widget[existingType] : {};
 
