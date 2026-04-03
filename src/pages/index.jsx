@@ -663,10 +663,18 @@ export default function Wrapper({ initialSettings, fallback }) {
       html.classList.add(desiredPresetClass);
     }
 
-    // Remove any previously applied inline styles
-    body.style.backgroundImage = "";
-    body.style.backgroundColor = "";
-    body.style.backgroundAttachment = "";
+    const presetMap = {
+      "velvet-night": { start: "21 15 44", mid: "31 41 88", end: "15 23 42", accent: "139 92 246" },
+      "ember-grid": { start: "28 25 23", mid: "68 36 18", end: "17 24 39", accent: "249 115 22" },
+      cloudmilk: { start: "248 250 252", mid: "239 246 255", end: "255 255 255", accent: "96 165 250" },
+      "solar-linen": { start: "255 251 235", mid: "250 245 230", end: "255 255 250", accent: "217 119 6" },
+      "north-sea": { start: "226 232 240", mid: "203 213 225", end: "241 245 249", accent: "14 116 144" },
+    };
+    const activePreset = presetMap[preset] || presetMap["velvet-night"];
+    html.style.setProperty("--panelio-accent", activePreset.accent);
+    body.style.backgroundImage = `radial-gradient(circle at top left, rgb(${activePreset.accent} / 0.16), transparent 28%), linear-gradient(135deg, rgb(${activePreset.start}) 0%, rgb(${activePreset.mid}) 45%, rgb(${activePreset.end}) 100%)`;
+    body.style.backgroundAttachment = "fixed";
+    body.style.backgroundColor = `rgb(${activePreset.end})`;
   }, [backgroundImage, opacity, theme, color, initialSettings.color, settings?.color, settings?.panelioThemePreset]);
 
   return (

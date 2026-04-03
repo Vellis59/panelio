@@ -16,5 +16,5 @@ panelioPinned:
   - Monitoring::Grafana
   - Monitoring::Dozzle
   - Networking::Pi-hole
-panelioCardStyle: classic
-panelioThemePreset: cloudmilk
+panelioCardStyle: panelio
+panelioThemePreset: ember-grid
