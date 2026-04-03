@@ -21,6 +21,26 @@ export default function Item({ service, groupName, useEqualHeights }) {
   const [statsOpen, setStatsOpen] = useState(service.showStats);
   const [statsClosing, setStatsClosing] = useState(false);
 
+  const pinnedKeys = settings?.panelioPinned || [];
+  const pinKey = `${groupName}::${service.name}`;
+  const isPinned = pinnedKeys.includes(pinKey);
+
+  const togglePin = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const res = await fetch("/api/admin/pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ group: groupName, service: service.name }),
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch {}
+  };
+
   // set stats to closed after 300ms
   const closeStats = () => {
     if (statsOpen) {
@@ -38,10 +58,19 @@ export default function Item({ service, groupName, useEqualHeights }) {
         className={classNames(
           settings.cardBlur !== undefined && `backdrop-blur${settings.cardBlur.length ? "-" : ""}${settings.cardBlur}`,
           useEqualHeights && "h-[calc(100%-0.5rem)]",
-          "transition-all mb-2 p-1 rounded-md font-medium text-theme-700 dark:text-theme-200 dark:hover:text-theme-300 shadow-md shadow-theme-900/10 dark:shadow-theme-900/20 bg-theme-100/20 hover:bg-theme-300/20 dark:bg-white/5 dark:hover:bg-white/10 relative overflow-clip service-card",
+          "transition-all mb-2 p-1 rounded-md font-medium text-theme-700 dark:text-theme-200 dark:hover:text-theme-300 shadow-md shadow-theme-900/10 dark:shadow-theme-900/20 bg-theme-100/20 hover:bg-theme-300/20 dark:bg-white/5 dark:hover:bg-white/10 relative overflow-clip service-card group",
         )}
       >
         <div className="flex select-none z-0 service-title">
+          {/* Pin button — top-left, appears on hover */}
+          <button
+            type="button"
+            onClick={togglePin}
+            className={`absolute top-1 left-1 z-20 text-sm transition-opacity ${isPinned ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+            title={isPinned ? "Unpin" : "Pin to top"}
+          >
+            <span className={isPinned ? "text-amber-400" : "text-theme-400 dark:text-theme-500"}>{isPinned ? String.fromCharCode(9733) : String.fromCharCode(9734)}</span>
+          </button>
           {(service.icon || service.href || service.name) &&
             (hasLink ? (
               <a

@@ -4,6 +4,7 @@ import BookmarksGroup from "components/bookmarks/group";
 import ErrorBoundary from "components/errorboundry";
 import PanelioHostDiagnostic from "components/panelio-host-diagnostic";
 import PanelioGreeting from "components/panelio-greeting";
+import PinnedBar from "components/pinned-bar";
 import QuickLaunch from "components/quicklaunch";
 import ServicesGroup from "components/services/group";
 import Tab, { slugifyAndEncode } from "components/tab";
@@ -566,6 +567,28 @@ function Home({ initialSettings }) {
         </div>
 
         <PanelioOverview services={services} bookmarks={bookmarks} widgets={widgets} cardBlur={settings.cardBlur} settings={settings} />
+        {(() => {
+          const pinnedKeys = settings.panelioPinned || [];
+          if (pinnedKeys.length === 0) return null;
+          const pinnedSvcs = [];
+          services?.forEach((g) => {
+            g.services?.forEach((s) => {
+              if (pinnedKeys.includes(`${g.name}::${s.name}`)) {
+                pinnedSvcs.push(s);
+              }
+              // sub-groups
+              if (Array.isArray(s)) {
+                s.forEach((sub) => {
+                  const subName = Object.keys(sub)[0];
+                  if (pinnedKeys.includes(`${g.name}::${subName}`)) {
+                    pinnedSvcs.push(sub[subName]);
+                  }
+                });
+              }
+            });
+          });
+          return <PinnedBar pinnedServices={pinnedSvcs} />;
+        })()}
 
         {servicesAndBookmarksGroups}
 
