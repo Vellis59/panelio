@@ -948,6 +948,7 @@ function SettingsTab() {
   const [greetingName, setGreetingName] = useState("");
   const [showGreeting, setShowGreeting] = useState(true);
   const [showClock, setShowClock] = useState(true);
+  const [cardStyle, setCardStyle] = useState("panelio");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -965,6 +966,7 @@ function SettingsTab() {
         setGreetingName(data.panelioGreetingName || "");
         setShowGreeting(data.panelioShowGreeting !== false);
         setShowClock(data.panelioShowClock !== false);
+        setCardStyle(data.panelioCardStyle || "panelio");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -986,6 +988,7 @@ function SettingsTab() {
       else delete updates.panelioGreetingName;
       updates.panelioShowGreeting = showGreeting;
       updates.panelioShowClock = showClock;
+      updates.panelioCardStyle = cardStyle;
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -1054,6 +1057,22 @@ function SettingsTab() {
               className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
             />
           </div>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
+        <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">🪟 Service Card Style</h3>
+        <p className="text-xs text-gray-400 mb-3">Choose the visual style for service cards on the homepage.</p>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Card style</label>
+          <select
+            value={cardStyle}
+            onChange={(e) => setCardStyle(e.target.value)}
+            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+          >
+            <option value="panelio">Panelio — Soft Glass</option>
+            <option value="classic">Classic — Current style</option>
+          </select>
         </div>
       </div>
 

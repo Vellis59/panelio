@@ -24,6 +24,8 @@ export default function Item({ service, groupName, useEqualHeights }) {
   const pinnedKeys = settings?.panelioPinned || [];
   const pinKey = `${groupName}::${service.name}`;
   const isPinned = pinnedKeys.includes(pinKey);
+  const cardStyle = settings?.panelioCardStyle || "panelio";
+  const isPanelioStyle = cardStyle === "panelio";
 
   const togglePin = async (e) => {
     e.preventDefault();
@@ -58,16 +60,20 @@ export default function Item({ service, groupName, useEqualHeights }) {
         className={classNames(
           settings.cardBlur !== undefined && `backdrop-blur${settings.cardBlur.length ? "-" : ""}${settings.cardBlur}`,
           useEqualHeights && "h-[calc(100%-0.5rem)]",
-          "transition-all mb-2 p-1 rounded-md font-medium text-theme-700 dark:text-theme-200 dark:hover:text-theme-300 shadow-md shadow-theme-900/10 dark:shadow-theme-900/20 bg-theme-100/20 hover:bg-theme-300/20 dark:bg-white/5 dark:hover:bg-white/10 relative overflow-clip service-card group",
+          isPanelioStyle
+            ? "transition-all mb-3 rounded-2xl font-medium text-theme-700 dark:text-theme-100 shadow-lg shadow-theme-900/10 dark:shadow-black/30 bg-gradient-to-br from-white/25 via-white/10 to-white/5 dark:from-white/10 dark:via-white/[0.07] dark:to-white/[0.03] hover:from-white/30 hover:via-white/15 hover:to-white/10 dark:hover:from-white/15 dark:hover:via-white/10 dark:hover:to-white/[0.06] border border-white/15 dark:border-white/10 relative overflow-hidden service-card group hover:-translate-y-0.5"
+            : "transition-all mb-2 p-1 rounded-md font-medium text-theme-700 dark:text-theme-200 dark:hover:text-theme-300 shadow-md shadow-theme-900/10 dark:shadow-theme-900/20 bg-theme-100/20 hover:bg-theme-300/20 dark:bg-white/5 dark:hover:bg-white/10 relative overflow-clip service-card group",
         )}
       >
-        <div className="flex select-none z-0 service-title">
+        {isPanelioStyle && <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_35%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_35%)]" />}
+        <div className={classNames("flex select-none z-0 service-title", isPanelioStyle ? "items-center px-3 py-3" : "")}>
           {/* Pin button — top-left, appears on hover */}
           <button
             type="button"
             onClick={togglePin}
             className={classNames(
-              "absolute top-1 left-1 z-20 text-sm transition-all rounded-full px-1 py-0.5 backdrop-blur-sm",
+              "absolute z-20 text-sm transition-all rounded-full px-1 py-0.5 backdrop-blur-sm",
+              isPanelioStyle ? "top-2 left-2" : "top-1 left-1",
               isPinned
                 ? "opacity-100 bg-amber-500/20"
                 : "opacity-35 group-hover:opacity-100 bg-black/20 hover:bg-black/35 dark:bg-white/10 dark:hover:bg-white/20",
@@ -82,13 +88,13 @@ export default function Item({ service, groupName, useEqualHeights }) {
                 href={service.href}
                 target={service.target ?? settings.target ?? "_blank"}
                 rel="noreferrer"
-                className="shrink-0 flex items-center justify-center w-12 service-icon z-10"
+                className={classNames("shrink-0 flex items-center justify-center service-icon z-10", isPanelioStyle ? "w-14 h-14 rounded-2xl bg-white/15 dark:bg-white/10 border border-white/10 shadow-inner" : "w-12")}
                 aria-label={service.icon || service.name}
               >
                 <ResolvedIcon icon={service.icon} href={service.href} serviceName={service.name} />
               </a>
             ) : (
-              <div className="shrink-0 flex items-center justify-center w-12 service-icon z-10">
+              <div className={classNames("shrink-0 flex items-center justify-center service-icon z-10", isPanelioStyle ? "w-14 h-14 rounded-2xl bg-white/15 dark:bg-white/10 border border-white/10 shadow-inner" : "w-12")}>
                 <ResolvedIcon icon={service.icon} href={service.href} serviceName={service.name} />
               </div>
             ))}
@@ -98,20 +104,20 @@ export default function Item({ service, groupName, useEqualHeights }) {
               href={service.href}
               target={service.target ?? settings.target ?? "_blank"}
               rel="noreferrer"
-              className="flex-1 flex items-center justify-between rounded-r-md service-title-text"
+              className={classNames("flex-1 flex items-center justify-between service-title-text", isPanelioStyle ? "rounded-2xl min-w-0" : "rounded-r-md")}
             >
-              <div className="flex-1 px-2 py-2 text-sm text-left z-10 service-name">
-                {service.name}
-                <p className="text-theme-500 dark:text-theme-300 text-xs font-light service-description">
+              <div className={classNames("flex-1 text-left z-10 service-name min-w-0", isPanelioStyle ? "px-3 py-1" : "px-2 py-2 text-sm")}>
+                <div className={classNames(isPanelioStyle ? "text-sm font-semibold tracking-tight text-theme-900 dark:text-white truncate" : "")}>{service.name}</div>
+                <p className={classNames("service-description", isPanelioStyle ? "text-theme-700/70 dark:text-theme-200/70 text-xs font-normal mt-1 truncate" : "text-theme-500 dark:text-theme-300 text-xs font-light")}>
                   {service.description}
                 </p>
               </div>
             </a>
           ) : (
-            <div className="flex-1 flex items-center justify-between rounded-r-md service-title-text">
-              <div className="flex-1 px-2 py-2 text-sm text-left z-10 service-name">
-                {service.name}
-                <p className="text-theme-500 dark:text-theme-300 text-xs font-light service-description">
+            <div className={classNames("flex-1 flex items-center justify-between service-title-text", isPanelioStyle ? "rounded-2xl min-w-0" : "rounded-r-md")}>
+              <div className={classNames("flex-1 text-left z-10 service-name min-w-0", isPanelioStyle ? "px-3 py-1" : "px-2 py-2 text-sm")}>
+                <div className={classNames(isPanelioStyle ? "text-sm font-semibold tracking-tight text-theme-900 dark:text-white truncate" : "")}>{service.name}</div>
+                <p className={classNames("service-description", isPanelioStyle ? "text-theme-700/70 dark:text-theme-200/70 text-xs font-normal mt-1 truncate" : "text-theme-500 dark:text-theme-300 text-xs font-light")}>
                   {service.description}
                 </p>
               </div>
@@ -119,9 +125,10 @@ export default function Item({ service, groupName, useEqualHeights }) {
           )}
 
           <div
-            className={`absolute top-0 right-0 flex flex-row justify-end ${
-              statusStyle === "dot" ? "gap-0" : "gap-2 mr-2"
-            } z-10 service-tags`}
+            className={classNames(
+              "absolute flex flex-row justify-end z-10 service-tags",
+              isPanelioStyle ? "top-2 right-2 gap-1.5" : statusStyle === "dot" ? "top-0 right-0 gap-0" : "top-0 right-0 gap-2 mr-2",
+            )}
           >
             {service.ping && (
               <div className="shrink-0 flex items-center justify-center service-tag service-ping">
