@@ -1,15 +1,13 @@
 services:
   panelio:
-    build:
-      context: ../..
-      dockerfile: Dockerfile
+    build: .
     container_name: panelio
     restart: unless-stopped
     ports:
       - "3011:3000"
     environment:
-      HOMEPAGE_ALLOWED_HOSTS: panelio.vellis.cc
-      PANELIO_ADMIN_PASSWORD: "Aw030372**"
+      HOMEPAGE_ALLOWED_HOSTS: "localhost"
+      PANELIO_ADMIN_PASSWORD: "changeme"
       PUID: "1000"
       PGID: "1000"
     volumes:

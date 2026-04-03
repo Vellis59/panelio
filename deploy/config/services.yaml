@@ -1,0 +1,16 @@
+---
+# Example services configuration
+# Copy this folder to ./config/ and customize it
+
+- My Services:
+    - Router:
+        href: http://192.168.1.1
+        description: Network router
+    - NAS:
+        href: http://192.168.1.100:5000
+        description: File storage
+
+- Media:
+    - Plex:
+        href: http://192.168.1.101:32400
+        description: Media server

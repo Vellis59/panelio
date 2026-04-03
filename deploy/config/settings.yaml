@@ -1,0 +1,6 @@
+---
+title: My Dashboard
+favicon: https://example.com/favicon.ico
+theme: dark
+panelioCardStyle: panelio
+panelioShowStatusDot: true
