@@ -655,9 +655,14 @@ export default function Wrapper({ initialSettings, fallback }) {
     const body = document.body;
     const pageWrapper = document.getElementById("page_wrapper");
 
+    // Auto-switch light/dark based on preset brightness
+    const lightPresets = ["cloudmilk", "solar-linen"];
+    const shouldBeLight = lightPresets.includes(preset);
+    const effectiveTheme = shouldBeLight ? "light" : theme;
+
     html.classList.remove("dark", "scheme-dark", "scheme-light");
-    html.classList.toggle("dark", theme === "dark");
-    html.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light");
+    html.classList.toggle("dark", effectiveTheme === "dark");
+    html.classList.add(effectiveTheme === "dark" ? "scheme-dark" : "scheme-light");
 
     const desiredThemeClass = `theme-${color || settings?.color || initialSettings.color || "slate"}`;
     const themeClassesToRemove = Array.from(html.classList).filter(
