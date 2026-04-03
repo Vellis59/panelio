@@ -9,6 +9,21 @@ A modern self-hosted dashboard with a built-in admin UI.
 
 Panelio is a fork of [Homepage](https://github.com/gethomepage/homepage) that adds a full web-based configuration interface — no more editing YAML files by hand.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/dashboard-dark.jpg" width="45%" alt="Dashboard dark mode">
+  <img src="docs/screenshots/dashboard-light.jpg" width="45%" alt="Dashboard light mode">
+</p>
+<p align="center">
+  <img src="docs/screenshots/glass-cards.jpg" width="30%" alt="Glass card style">
+  <img src="docs/screenshots/status-dots.jpg" width="30%" alt="Status dots">
+  <img src="docs/screenshots/pinned-bar.jpg" width="30%" alt="Pinned bar">
+</p>
+<p align="center">
+  <img src="docs/screenshots/admin-panel.jpg" width="60%" alt="Admin panel">
+</p>
+
 ## Features
 
 - 🖥️ **Visual admin panel** — manage services, bookmarks, widgets and settings from your browser
