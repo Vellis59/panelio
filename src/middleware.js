@@ -41,7 +41,7 @@ function getPanelioHostHelp(host, allowedHosts) {
     hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS, or use * only if you fully trust the deployment environment.",
     suggestedEnv,
     allowedHosts: Array.from(allowedHosts),
-    docs: "/docs/installation/#homepage_allowed_hosts",
+    docs: "/docs/troubleshooting/host-validation",
   };
 }
 

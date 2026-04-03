@@ -6,6 +6,10 @@ hide:
   - navigation
 ---
 
+## Common startup problems
+
+- [Host validation troubleshooting](host-validation.md) — fix the `Host validation failed` startup issue with setup-specific guidance.
+
 ## General Troubleshooting Tips
 
 - For API errors, clicking the "API Error Information" button in the widget will usually show some helpful information as to whether the issue is reaching the service host, an authentication issue, etc.

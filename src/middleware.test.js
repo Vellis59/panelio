@@ -52,7 +52,7 @@ describe("middleware", () => {
         hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS, or use * only if you fully trust the deployment environment.",
         suggestedEnv: "HOMEPAGE_ALLOWED_HOSTS=evil.com",
         allowedHosts: ["localhost:3000", "127.0.0.1:3000", "[::1]:3000"],
-        docs: "/docs/installation/#homepage_allowed_hosts",
+        docs: "/docs/troubleshooting/host-validation",
       },
       { status: 400 },
     );

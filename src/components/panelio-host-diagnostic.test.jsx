@@ -15,7 +15,7 @@ describe("components/panelio-host-diagnostic", () => {
           hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS.",
           suggestedEnv: "HOMEPAGE_ALLOWED_HOSTS=panelio.vellis.cc",
           allowedHosts: ["localhost:3000"],
-          docs: "/docs/installation/#homepage_allowed_hosts",
+          docs: "/docs/troubleshooting/host-validation",
         }}
       />,
     );

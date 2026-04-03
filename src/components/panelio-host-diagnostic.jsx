@@ -84,7 +84,7 @@ export default function PanelioHostDiagnostic({ error }) {
   }
 
   const suggestedEnv = error?.suggestedEnv;
-  const docsUrl = error?.docs || "/docs/installation/#homepage_allowed_hosts";
+  const docsUrl = error?.docs || "/docs/troubleshooting/host-validation";
   const hostFromMessage = error?.message?.match(/host \"([^\"]+)\"/)?.[1] || "";
   const scenarioHelp = buildScenarioHelp(hostFromMessage, suggestedEnv);
 
