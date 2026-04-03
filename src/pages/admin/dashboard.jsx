@@ -942,6 +942,9 @@ function WidgetsTab() {
 function SettingsTab() {
   const [settings, setSettings] = useState({});
   const [json, setJson] = useState("");
+  const [overviewTitle, setOverviewTitle] = useState("");
+  const [overviewSubtitle, setOverviewSubtitle] = useState("");
+  const [overviewDescription, setOverviewDescription] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -953,6 +956,9 @@ function SettingsTab() {
       .then((data) => {
         setSettings(data);
         setJson(JSON.stringify(data, null, 2));
+        setOverviewTitle(data.panelioOverviewTitle || "");
+        setOverviewSubtitle(data.panelioOverviewSubtitle || "");
+        setOverviewDescription(data.panelioOverviewDescription || "");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -962,7 +968,14 @@ function SettingsTab() {
     setSuccess(false);
     setSaving(true);
     try {
-      const updates = JSON.parse(json);
+      let updates = JSON.parse(json);
+      // Merge overview fields
+      if (overviewTitle) updates.panelioOverviewTitle = overviewTitle;
+      else delete updates.panelioOverviewTitle;
+      if (overviewSubtitle) updates.panelioOverviewSubtitle = overviewSubtitle;
+      else delete updates.panelioOverviewSubtitle;
+      if (overviewDescription) updates.panelioOverviewDescription = overviewDescription;
+      else delete updates.panelioOverviewDescription;
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -998,6 +1011,41 @@ function SettingsTab() {
       </div>
 
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
+      {/* Panelio Overview customization */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
+        <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">🏠 Homepage Overview</h3>
+        <p className="text-xs text-gray-400 mb-3">Customize the overview section shown on your homepage.</p>
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block">Title</label>
+            <input
+              value={overviewTitle}
+              onChange={(e) => setOverviewTitle(e.target.value)}
+              placeholder="Panelio Overview"
+              className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block">Subtitle</label>
+            <input
+              value={overviewSubtitle}
+              onChange={(e) => setOverviewSubtitle(e.target.value)}
+              placeholder="Your dashboard at a glance"
+              className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block">Description</label>
+            <input
+              value={overviewDescription}
+              onChange={(e) => setOverviewDescription(e.target.value)}
+              placeholder="Auto-generated if left empty"
+              className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
+            />
+          </div>
+        </div>
+      </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
         <p className="text-xs text-gray-400 mb-2">
