@@ -61,51 +61,111 @@ export async function writeConfig(filename, data) {
 /**
  * CRUD operations for services.yaml
  */
+function findGroupEntry(groups, groupName) {
+  return groups.find((g) => Object.keys(g)[0] === groupName);
+}
+
+function findSubgroupEntry(groupItems, subgroupName) {
+  return groupItems.find((item) => {
+    const key = Object.keys(item)[0];
+    const val = item[key];
+    return Array.isArray(val) && typeof val[0] === "object" && !val[0].href;
+  });
+}
+
+function isSubgroupItem(item) {
+  const key = Object.keys(item)[0];
+  const val = item[key];
+  return Array.isArray(val) && val.length > 0 && typeof val[0] === "object" && !val[0].href;
+}
+
+function getServiceItems(groupItems) {
+  return groupItems.filter((item) => !isSubgroupItem(item));
+}
+
+function getSubgroupItems(groupItems) {
+  return groupItems.filter((item) => isSubgroupItem(item));
+}
+
 export const servicesOps = {
   async list() {
     return readConfig("services.yaml");
   },
 
-  async add(groupName, service) {
+  async add(groupName, service, subgroupName) {
     const groups = await this.list();
-    let group = groups.find((g) => Object.keys(g)[0] === groupName);
+    let group = findGroupEntry(groups, groupName);
     if (!group) {
       group = { [groupName]: [] };
       groups.push(group);
     }
-    const services = group[groupName];
-    services.push({ [service.name]: { ...service } });
+    const items = group[groupName];
+
+    if (subgroupName) {
+      let sub = items.find((item) => isSubgroupItem(item) && Object.keys(item)[0] === subgroupName);
+      if (!sub) {
+        throw new Error(`Sub-group "${subgroupName}" not found in group "${groupName}"`);
+      }
+      sub[subgroupName].push({ [service.name]: { ...service } });
+    } else {
+      items.push({ [service.name]: { ...service } });
+    }
+
     await writeConfig("services.yaml", groups);
     return groups;
   },
 
-  async update(groupName, serviceName, updates) {
+  async update(groupName, serviceName, updates, subgroupName) {
     const groups = await this.list();
-    const group = groups.find((g) => Object.keys(g)[0] === groupName);
+    const group = findGroupEntry(groups, groupName);
     if (!group) throw new Error(`Group "${groupName}" not found`);
-    const services = group[groupName];
-    const idx = services.findIndex((s) => Object.keys(s)[0] === serviceName);
-    if (idx === -1) throw new Error(`Service "${serviceName}" not found in group "${groupName}"`);
 
-    // If renaming, update the key
-    const oldService = services[idx];
+    let target;
+    if (subgroupName) {
+      target = group[groupName].find((item) => isSubgroupItem(item) && Object.keys(item)[0] === subgroupName);
+      if (!target) throw new Error(`Sub-group "${subgroupName}" not found`);
+      target = target[subgroupName];
+    } else {
+      target = group[groupName];
+    }
+
+    const idx = target.findIndex((s) => Object.keys(s)[0] === serviceName);
+    if (idx === -1) throw new Error(`Service "${serviceName}" not found`);
+
+    const oldService = target[idx];
     const oldKey = Object.keys(oldService)[0];
     const newKey = updates.name || oldKey;
     const existingData = oldService[oldKey];
-    delete updates.name; // Don't store name as a field
+    delete updates.name;
 
-    services[idx] = { [newKey]: { ...existingData, ...updates } };
+    target[idx] = { [newKey]: { ...existingData, ...updates } };
     await writeConfig("services.yaml", groups);
     return groups;
   },
 
-  async remove(groupName, serviceName) {
+  async remove(groupName, serviceName, subgroupName) {
     const groups = await this.list();
-    const group = groups.find((g) => Object.keys(g)[0] === groupName);
+    const group = findGroupEntry(groups, groupName);
     if (!group) throw new Error(`Group "${groupName}" not found`);
-    group[groupName] = group[groupName].filter((s) => Object.keys(s)[0] !== serviceName);
 
-    // Remove empty groups
+    let target;
+    if (subgroupName) {
+      const sub = group[groupName].find((item) => isSubgroupItem(item) && Object.keys(item)[0] === subgroupName);
+      if (!sub) throw new Error(`Sub-group "${subgroupName}" not found`);
+      target = sub[subgroupName];
+    } else {
+      target = group[groupName];
+    }
+
+    const idx = target.findIndex((s) => Object.keys(s)[0] === serviceName);
+    if (idx !== -1) target.splice(idx, 1);
+
+    // Clean up empty subgroups
+    if (subgroupName && target.length === 0) {
+      const subIdx = group[groupName].findIndex((item) => isSubgroupItem(item) && Object.keys(item)[0] === subgroupName);
+      if (subIdx !== -1) group[groupName].splice(subIdx, 1);
+    }
+
     if (group[groupName].length === 0) {
       const gIdx = groups.indexOf(group);
       groups.splice(gIdx, 1);
@@ -122,7 +182,7 @@ export const servicesOps = {
 
   async addGroup(groupName) {
     const groups = await this.list();
-    if (groups.find((g) => Object.keys(g)[0] === groupName)) {
+    if (findGroupEntry(groups, groupName)) {
       throw new Error(`Group "${groupName}" already exists`);
     }
     groups.push({ [groupName]: [] });
@@ -139,15 +199,63 @@ export const servicesOps = {
 
   async renameGroup(oldName, newName) {
     const groups = await this.list();
-    const group = groups.find((g) => Object.keys(g)[0] === oldName);
+    const group = findGroupEntry(groups, oldName);
     if (!group) throw new Error(`Group "${oldName}" not found`);
-    if (groups.find((g) => Object.keys(g)[0] === newName)) {
+    if (findGroupEntry(groups, newName)) {
       throw new Error(`Group "${newName}" already exists`);
     }
-
     const index = groups.indexOf(group);
     const items = group[oldName];
     groups[index] = { [newName]: items };
+    await writeConfig("services.yaml", groups);
+    return groups;
+  },
+
+  // --- Nested sub-group operations ---
+
+  async addSubgroup(groupName, subgroupName) {
+    const groups = await this.list();
+    const group = findGroupEntry(groups, groupName);
+    if (!group) throw new Error(`Group "${groupName}" not found`);
+    const items = group[groupName];
+
+    const existing = items.find((item) => Object.keys(item)[0] === subgroupName);
+    if (existing) throw new Error(`"${subgroupName}" already exists in group "${groupName}"`);
+
+    items.push({ [subgroupName]: [] });
+    await writeConfig("services.yaml", groups);
+    return groups;
+  },
+
+  async renameSubgroup(groupName, oldSubName, newSubName) {
+    const groups = await this.list();
+    const group = findGroupEntry(groups, groupName);
+    if (!group) throw new Error(`Group "${groupName}" not found`);
+    const items = group[groupName];
+
+    const sub = items.find((item) => isSubgroupItem(item) && Object.keys(item)[0] === oldSubName);
+    if (!sub) throw new Error(`Sub-group "${oldSubName}" not found`);
+
+    const existing = items.find((item) => Object.keys(item)[0] === newSubName);
+    if (existing) throw new Error(`"${newSubName}" already exists in group "${groupName}"`);
+
+    const subItems = sub[oldSubName];
+    const idx = items.indexOf(sub);
+    items[idx] = { [newSubName]: subItems };
+    await writeConfig("services.yaml", groups);
+    return groups;
+  },
+
+  async removeSubgroup(groupName, subgroupName) {
+    const groups = await this.list();
+    const group = findGroupEntry(groups, groupName);
+    if (!group) throw new Error(`Group "${groupName}" not found`);
+    const items = group[groupName];
+
+    const idx = items.findIndex((item) => isSubgroupItem(item) && Object.keys(item)[0] === subgroupName);
+    if (idx === -1) throw new Error(`Sub-group "${subgroupName}" not found`);
+
+    items.splice(idx, 1);
     await writeConfig("services.yaml", groups);
     return groups;
   },

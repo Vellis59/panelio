@@ -96,6 +96,69 @@ function BookmarkForm({ bookmark, onSave, onCancel }) {
   );
 }
 
+// --- Sub-group Section Component ---
+function SubgroupSection({ groupName, subgroupName, subItems, editingService, setEditingService, updateService, deleteService, addingServiceToSubgroup, setAddingServiceToSubgroup, saveNewService, renamingSubgroup, setRenamingSubgroup, renameSubgroup, removeSubgroup }) {
+  return (
+    <div className="ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 mt-1 mb-1">
+      <div className="flex items-center justify-between py-1.5 px-2 bg-gray-50 dark:bg-gray-750 rounded">
+        {renamingSubgroup?.group === groupName && renamingSubgroup?.oldName === subgroupName ? (
+          <div className="flex items-center gap-2 flex-1 mr-2">
+            <input autoFocus defaultValue={subgroupName}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") renameSubgroup(groupName, subgroupName, e.currentTarget.value);
+                if (e.key === "Escape") setRenamingSubgroup(null);
+              }}
+              className="px-2 py-1 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-xs flex-1"
+            />
+            <button onClick={(e) => renameSubgroup(groupName, subgroupName, e.currentTarget.parentElement.querySelector("input")?.value || subgroupName)}
+              className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded">Save</button>
+            <button onClick={() => setRenamingSubgroup(null)}
+              className="text-xs px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded">Cancel</button>
+          </div>
+        ) : (
+          <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">\uD83D\uDCC1 {subgroupName}</span>
+        )}
+        <div className="flex gap-1">
+          <button onClick={() => setRenamingSubgroup({ group: groupName, oldName: subgroupName })}
+            className="text-xs text-gray-400 hover:text-amber-500">\u270F\uFE0F</button>
+          <button onClick={() => setAddingServiceToSubgroup(`${groupName}/${subgroupName}`)}
+            className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded dark:bg-blue-900 dark:text-blue-300">+ Service</button>
+          <button onClick={() => removeSubgroup(groupName, subgroupName)}
+            className="text-xs text-gray-400 hover:text-red-500">\uD83D\uDCC1</button>
+        </div>
+      </div>
+      <div className="mt-1">
+        {addingServiceToSubgroup === `${groupName}/${subgroupName}` && (
+          <ServiceForm
+            onSave={(data) => saveNewService(groupName, data, subgroupName)}
+            onCancel={() => setAddingServiceToSubgroup(null)}
+          />
+        )}
+        {subItems.map((svc, idx) => {
+          const svcName = Object.keys(svc)[0];
+          const svcData = svc[svcName];
+          return (
+            <div key={idx} className="flex items-center justify-between py-1.5 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
+              <div>
+                <span className="font-medium text-gray-700 dark:text-gray-200 text-sm">{svcName}</span>
+                {svcData.description && <span className="text-gray-400 text-xs ml-2">{svcData.description}</span>}
+              </div>
+              <div className="flex items-center gap-1">
+                {svcData.href && <a href={svcData.href} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">{svcData.href}</a>}
+                <button onClick={() => setEditingService({ group: groupName, index: idx, subgroup: subgroupName })} className="text-xs text-gray-400 hover:text-blue-500">\u270F\uFE0F</button>
+                <button onClick={() => deleteService(groupName, svcName, subgroupName)} className="text-xs text-gray-400 hover:text-red-500">\uD83D\uDDD1\uFE0F</button>
+              </div>
+            </div>
+          );
+        })}
+        {subItems.length === 0 && !addingServiceToSubgroup && (
+          <p className="text-gray-400 text-xs text-center py-1">No services in this sub-group</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // --- Main Dashboard ---
 export default function AdminDashboard() {
   const router = useRouter();
@@ -110,6 +173,9 @@ export default function AdminDashboard() {
   const [newGroupName, setNewGroupName] = useState("");
   const [renamingServiceGroup, setRenamingServiceGroup] = useState(null);
   const [renamingBookmarkGroup, setRenamingBookmarkGroup] = useState(null);
+  const [addingSubgroup, setAddingSubgroup] = useState(null); // "groupName"
+  const [renamingSubgroup, setRenamingSubgroup] = useState(null); // { group, oldName }
+  const [addingServiceToSubgroup, setAddingServiceToSubgroup] = useState(null); // "groupName/subgroupName"
 
   const fetchServices = useCallback(async () => {
     const res = await fetch("/api/admin/services");
@@ -174,32 +240,71 @@ export default function AdminDashboard() {
     fetchServices();
   };
 
-  const saveNewService = async (groupName, data) => {
+  const saveNewService = async (groupName, data, subgroupName) => {
     await fetch("/api/admin/services", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group: groupName, service: data }),
+      body: JSON.stringify({ group: groupName, service: data, subgroup: subgroupName || undefined }),
     });
     setAddingService(null);
+    setAddingServiceToSubgroup(null);
     fetchServices();
   };
 
-  const updateService = async (groupName, oldName, data) => {
+  const updateService = async (groupName, oldName, data, subgroupName) => {
     await fetch("/api/admin/services", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group: groupName, service: oldName, updates: data }),
+      body: JSON.stringify({ group: groupName, service: oldName, updates: data, subgroup: subgroupName || undefined }),
     });
     setEditingService(null);
     fetchServices();
   };
 
-  const deleteService = async (groupName, serviceName) => {
+  const deleteService = async (groupName, serviceName, subgroupName) => {
     if (!confirm(`Delete service "${serviceName}"?`)) return;
     await fetch("/api/admin/services", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ group: groupName, service: serviceName }),
+      body: JSON.stringify({ group: groupName, service: serviceName, subgroup: subgroupName || undefined }),
+    });
+    fetchServices();
+  };
+
+  // --- Sub-group Actions ---
+  const addSubgroup = async (groupName, subgroupName) => {
+    const trimmed = subgroupName.trim();
+    if (!trimmed) return;
+    await fetch("/api/admin/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "addSubgroup", group: groupName, subgroup: trimmed }),
+    });
+    setAddingSubgroup(null);
+    fetchServices();
+  };
+
+  const renameSubgroup = async (groupName, oldSubName, newSubName) => {
+    const trimmed = newSubName.trim();
+    if (!trimmed || trimmed === oldSubName) {
+      setRenamingSubgroup(null);
+      return;
+    }
+    await fetch("/api/admin/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "renameSubgroup", group: groupName, oldSubgroup: oldSubName, newSubgroup: trimmed }),
+    });
+    setRenamingSubgroup(null);
+    fetchServices();
+  };
+
+  const removeSubgroup = async (groupName, subgroupName) => {
+    if (!confirm(`Delete sub-group "${subgroupName}" and all its services?`)) return;
+    await fetch("/api/admin/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "removeSubgroup", group: groupName, subgroup: subgroupName }),
     });
     fetchServices();
   };
@@ -426,6 +531,10 @@ export default function AdminDashboard() {
                         className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded dark:bg-amber-900 dark:text-amber-300">
                         Rename
                       </button>
+                      <button onClick={() => setAddingSubgroup(groupName)}
+                        className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded dark:bg-purple-900 dark:text-purple-300">
+                        + Sub-group
+                      </button>
                       <button onClick={() => setAddingService(groupName)}
                         className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded dark:bg-blue-900 dark:text-blue-300">
                         + Service
@@ -437,6 +546,27 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   <div className="p-4">
+                    {addingSubgroup === groupName && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <input
+                          placeholder="Sub-group name..."
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && e.currentTarget.value.trim()) addSubgroup(groupName, e.currentTarget.value);
+                            if (e.key === "Escape") setAddingSubgroup(null);
+                          }}
+                          className="px-3 py-1.5 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
+                        />
+                        <button
+                          onClick={(e) => addSubgroup(groupName, e.currentTarget.parentElement.querySelector("input")?.value || "")}
+                          className="px-3 py-1.5 bg-purple-600 text-white rounded text-xs"
+                        >Create</button>
+                        <button
+                          onClick={() => setAddingSubgroup(null)}
+                          className="px-3 py-1.5 bg-gray-200 dark:bg-gray-600 rounded text-xs"
+                        >Cancel</button>
+                      </div>
+                    )}
                     {addingService === groupName && (
                       <ServiceForm
                         onSave={(data) => saveNewService(groupName, data)}
@@ -446,9 +576,34 @@ export default function AdminDashboard() {
                     {items.map((svc, idx) => {
                       const svcName = Object.keys(svc)[0];
                       const svcData = svc[svcName];
+
+                      // Check if this is a sub-group entry
+                      if (Array.isArray(svcData) && svcData.length > 0 && typeof svcData[0] === "object" && !svcData[0].href) {
+                        return (
+                          <SubgroupSection
+                            key={svcName}
+                            groupName={groupName}
+                            subgroupName={svcName}
+                            subItems={svcData}
+                            editingService={editingService}
+                            setEditingService={setEditingService}
+                            updateService={updateService}
+                            deleteService={deleteService}
+                            addingServiceToSubgroup={addingServiceToSubgroup}
+                            setAddingServiceToSubgroup={setAddingServiceToSubgroup}
+                            saveNewService={saveNewService}
+                            renamingSubgroup={renamingSubgroup}
+                            setRenamingSubgroup={setRenamingSubgroup}
+                            renameSubgroup={renameSubgroup}
+                            removeSubgroup={removeSubgroup}
+                          />
+                        );
+                      }
+
+                      // Regular service entry
                       return (
                         <div key={idx}>
-                          {editingService?.group === groupName && editingService?.index === idx ? (
+                          {editingService?.group === groupName && editingService?.index === idx && !editingService?.subgroup ? (
                             <ServiceForm
                               service={svc}
                               onSave={(data) => updateService(groupName, svcName, data)}
@@ -477,7 +632,7 @@ export default function AdminDashboard() {
                         </div>
                       );
                     })}
-                    {items.length === 0 && !addingService && (
+                    {items.length === 0 && !addingService && !addingSubgroup && (
                       <p className="text-gray-400 text-sm text-center py-2">No services in this group</p>
                     )}
                   </div>

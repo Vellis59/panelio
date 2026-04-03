@@ -40,6 +40,27 @@ export default async function handler(req, res) {
           return res.status(200).json(result);
         }
 
+        if (action === "addSubgroup") {
+          const { group, subgroup } = req.body;
+          if (!group || !subgroup) return res.status(400).json({ error: "Missing group or subgroup name" });
+          const result = await servicesOps.addSubgroup(group, subgroup);
+          return res.status(201).json(result);
+        }
+
+        if (action === "renameSubgroup") {
+          const { group, oldSubgroup, newSubgroup } = req.body;
+          if (!group || !oldSubgroup || !newSubgroup) return res.status(400).json({ error: "Missing group, oldSubgroup or newSubgroup" });
+          const result = await servicesOps.renameSubgroup(group, oldSubgroup, newSubgroup);
+          return res.status(200).json(result);
+        }
+
+        if (action === "removeSubgroup") {
+          const { group, subgroup } = req.body;
+          if (!group || !subgroup) return res.status(400).json({ error: "Missing group or subgroup name" });
+          const result = await servicesOps.removeSubgroup(group, subgroup);
+          return res.status(200).json(result);
+        }
+
         if (action === "reorder") {
           const { groups } = req.body;
           if (!groups) return res.status(400).json({ error: "Missing groups" });
@@ -47,29 +68,30 @@ export default async function handler(req, res) {
           return res.status(200).json(result);
         }
 
-        // Default: add service
+        // Default: add service (optionally into a subgroup)
+        const { subgroup } = req.body;
         if (!group || !service) {
           return res.status(400).json({ error: "Missing group or service" });
         }
-        const result = await servicesOps.add(group, service);
+        const result = await servicesOps.add(group, service, subgroup);
         return res.status(201).json(result);
       }
 
       case "PUT": {
-        const { group, service, updates } = req.body;
+        const { group, service, updates, subgroup } = req.body;
         if (!group || !service) {
           return res.status(400).json({ error: "Missing group or service name" });
         }
-        const result = await servicesOps.update(group, service, updates || {});
+        const result = await servicesOps.update(group, service, updates || {}, subgroup);
         return res.status(200).json(result);
       }
 
       case "DELETE": {
-        const { group, service } = req.body;
+        const { group, service, subgroup } = req.body;
         if (!group || !service) {
           return res.status(400).json({ error: "Missing group or service name" });
         }
-        const result = await servicesOps.remove(group, service);
+        const result = await servicesOps.remove(group, service, subgroup);
         return res.status(200).json(result);
       }
 
