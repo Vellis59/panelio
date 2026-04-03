@@ -577,8 +577,8 @@ export default function AdminDashboard() {
                       const svcName = Object.keys(svc)[0];
                       const svcData = svc[svcName];
 
-                      // Check if this is a sub-group entry
-                      if (Array.isArray(svcData) && svcData.length > 0 && typeof svcData[0] === "object" && !svcData[0].href) {
+                      // Check if this is a sub-group entry (array = sub-group, object with href = service)
+                      if (Array.isArray(svcData)) {
                         return (
                           <SubgroupSection
                             key={svcName}
