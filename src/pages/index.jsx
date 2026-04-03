@@ -611,6 +611,7 @@ function Home({ initialSettings }) {
 export default function Wrapper({ initialSettings, fallback }) {
   const { theme } = useContext(ThemeContext);
   const { color } = useContext(ColorContext);
+  const { settings } = useContext(SettingsContext);
   let backgroundImage = "";
   let opacity = initialSettings?.backgroundOpacity ?? 0;
   let backgroundBlur = false;
@@ -639,7 +640,7 @@ export default function Wrapper({ initialSettings, fallback }) {
     html.classList.toggle("dark", theme === "dark");
     html.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light");
 
-    const desiredThemeClass = `theme-${color || initialSettings.color || "slate"}`;
+    const desiredThemeClass = `theme-${color || settings?.color || initialSettings.color || "slate"}`;
     const themeClassesToRemove = Array.from(html.classList).filter(
       (cls) => cls.startsWith("theme-") && cls !== desiredThemeClass,
     );
@@ -650,7 +651,7 @@ export default function Wrapper({ initialSettings, fallback }) {
       html.classList.add(desiredThemeClass);
     }
 
-    const preset = initialSettings?.panelioThemePreset || "velvet-night";
+    const preset = settings?.panelioThemePreset || initialSettings?.panelioThemePreset || "velvet-night";
     const desiredPresetClass = `panelio-preset-${preset}`;
     const presetClassesToRemove = Array.from(html.classList).filter(
       (cls) => cls.startsWith("panelio-preset-") && cls !== desiredPresetClass,
@@ -666,7 +667,7 @@ export default function Wrapper({ initialSettings, fallback }) {
     body.style.backgroundImage = "";
     body.style.backgroundColor = "";
     body.style.backgroundAttachment = "";
-  }, [backgroundImage, opacity, theme, color, initialSettings.color]);
+  }, [backgroundImage, opacity, theme, color, initialSettings.color, settings?.color, settings?.panelioThemePreset]);
 
   return (
     <>

@@ -15,4 +15,6 @@ panelioPinned:
   - Networking::Technitium
   - Monitoring::Grafana
   - Monitoring::Dozzle
-panelioCardStyle: panelio
+  - Networking::Pi-hole
+panelioCardStyle: classic
+panelioThemePreset: cloudmilk
