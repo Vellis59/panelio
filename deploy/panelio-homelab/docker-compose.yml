@@ -1,0 +1,16 @@
+services:
+  panelio:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    container_name: panelio
+    restart: unless-stopped
+    ports:
+      - "3011:3000"
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: panelio.vellis.cc
+      PUID: "1000"
+      PGID: "1000"
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
