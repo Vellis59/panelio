@@ -11,6 +11,70 @@ function DetailRow({ label, value, mono = false }) {
   );
 }
 
+function detectScenario(host) {
+  if (!host) return "generic";
+  if (host.startsWith("127.") || host.startsWith("192.168.") || host.startsWith("10.") || host.startsWith("172.")) {
+    return "lan";
+  }
+  if (host.includes("localhost") || host.includes(".local")) {
+    return "local";
+  }
+  if (host.includes("svc.cluster.local") || host.includes("cluster.local")) {
+    return "kubernetes";
+  }
+  return "domain";
+}
+
+function buildScenarioHelp(host, suggestedEnv) {
+  const scenario = detectScenario(host);
+
+  if (scenario === "lan") {
+    return {
+      title: "LAN or local IP access",
+      items: [
+        "You are likely opening Panelio from a local network IP or machine-specific address.",
+        "Add the exact IP:port shown above to HOMEPAGE_ALLOWED_HOSTS.",
+        "If you later switch to a domain name, add that domain too instead of replacing blindly.",
+      ],
+      example: suggestedEnv,
+    };
+  }
+
+  if (scenario === "local") {
+    return {
+      title: "Local or reverse-proxied development setup",
+      items: [
+        "If you use localhost directly, keep the exact localhost host:port combination.",
+        "If you use a reverse proxy or a local domain like panelio.local, allow that exact public host too.",
+        "Default port normalization is tolerated for common :80 and :443 cases, but the base host still needs to be allowed.",
+      ],
+      example: suggestedEnv,
+    };
+  }
+
+  if (scenario === "kubernetes") {
+    return {
+      title: "Kubernetes or cluster networking",
+      items: [
+        "Kubernetes deployments often need more than one allowed host.",
+        "Keep the probe / internal host entries required by the pod, then add the external host used in your ingress.",
+        "Do not remove the internal probe host when adding the public one.",
+      ],
+      example: suggestedEnv,
+    };
+  }
+
+  return {
+    title: "Public domain or reverse proxy",
+    items: [
+      "If Panelio is behind Traefik, Nginx Proxy Manager, Caddy, or another reverse proxy, allow the public domain users actually open in the browser.",
+      "Make sure the reverse proxy forwards the expected Host header instead of rewriting it unexpectedly.",
+      "If your browser reaches Panelio through a domain, that same domain should usually appear in HOMEPAGE_ALLOWED_HOSTS.",
+    ],
+    example: suggestedEnv,
+  };
+}
+
 export default function PanelioHostDiagnostic({ error }) {
   const allowedHosts = Array.isArray(error?.allowedHosts) ? error.allowedHosts : [];
   const isHostValidation = error?.error === "Host validation failed.";
@@ -21,6 +85,8 @@ export default function PanelioHostDiagnostic({ error }) {
 
   const suggestedEnv = error?.suggestedEnv;
   const docsUrl = error?.docs || "/docs/installation/#homepage_allowed_hosts";
+  const hostFromMessage = error?.message?.match(/host \"([^\"]+)\"/)?.[1] || "";
+  const scenarioHelp = buildScenarioHelp(hostFromMessage, suggestedEnv);
 
   const copySuggestedEnv = async () => {
     if (!suggestedEnv || typeof navigator === "undefined" || !navigator.clipboard) return;
@@ -77,6 +143,28 @@ export default function PanelioHostDiagnostic({ error }) {
                 <li>Restart the container or app.</li>
                 <li>Reload Panelio.</li>
               </ol>
+            </div>
+
+            <div className="rounded-md border border-amber-300/20 bg-amber-500/10 p-4">
+              <div className="font-semibold mb-2">Recommended for this setup: {scenarioHelp.title}</div>
+              <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base">
+                {scenarioHelp.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              {scenarioHelp.example && (
+                <div className="mt-3 rounded bg-black/15 px-3 py-2 font-mono text-xs sm:text-sm break-all">{scenarioHelp.example}</div>
+              )}
+            </div>
+
+            <div className="rounded-md border border-white/10 bg-black/10 p-4 text-sm sm:text-base">
+              <div className="font-semibold mb-2">Quick deployment hints</div>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><span className="font-medium">Docker / Compose:</span> set <span className="font-mono">HOMEPAGE_ALLOWED_HOSTS</span> in the container environment.</li>
+                <li><span className="font-medium">Reverse proxy:</span> allow the public domain users visit in the browser, not just the container name.</li>
+                <li><span className="font-medium">Source install:</span> export the variable before <span className="font-mono">pnpm start</span>.</li>
+                <li><span className="font-medium">Kubernetes:</span> keep probe/internal hosts if needed, then add the ingress host too.</li>
+              </ul>
             </div>
 
             <div className="flex flex-wrap gap-3 pt-1">

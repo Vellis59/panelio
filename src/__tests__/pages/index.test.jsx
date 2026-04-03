@@ -156,7 +156,12 @@ vi.mock("components/quicklaunch", () => ({
 }));
 
 vi.mock("components/panelio-host-diagnostic", () => ({
-  default: ({ error }) => <div data-testid="host-diagnostic">{error?.message}</div>,
+  default: ({ error }) => (
+    <div data-testid="host-diagnostic">
+      {error?.message}
+      <span>diagnostic-flow</span>
+    </div>
+  ),
 }));
 
 vi.mock("components/widgets/widget", () => ({
