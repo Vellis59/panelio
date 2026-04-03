@@ -294,10 +294,17 @@ function Home({ initialSettings }) {
   const { data: services } = useSWR("/api/services");
   const { data: bookmarks } = useSWR("/api/bookmarks");
   const { data: widgets } = useSWR("/api/widgets");
+  const { data: liveThemeSettings } = useSWR("/api/theme");
 
   const servicesAndBookmarks = [...bookmarks.map((bg) => bg.bookmarks).flat(), ...getAllServices(services)].filter(
     (i) => i?.href,
   );
+
+  useEffect(() => {
+    if (liveThemeSettings) {
+      setSettings((prev) => ({ ...prev, ...liveThemeSettings }));
+    }
+  }, [liveThemeSettings, setSettings]);
 
   useEffect(() => {
     const language = normalizeLanguage(settings.language);
