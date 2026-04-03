@@ -11,6 +11,7 @@ import Ping from "./ping";
 import ProxmoxStatus from "./proxmox-status";
 import SiteMonitor from "./site-monitor";
 import Status from "./status";
+import StatusDot from "./status-dot";
 import Widget from "./widget";
 
 export default function Item({ service, groupName, useEqualHeights }) {
@@ -213,12 +214,16 @@ export default function Item({ service, groupName, useEqualHeights }) {
           </div>
         </div>
 
-        {/* Quick Actions & status dot */}
+        {/* Status dot — top right */}
+        {isPanelioStyle && showStatusDot && hasLink && (
+          <div className="absolute top-2.5 right-2.5 z-20">
+            <StatusDot url={service.href} />
+          </div>
+        )}
+
+        {/* Quick Actions */}
         {isPanelioStyle && (
           <div className="absolute bottom-2 right-2 z-20 flex items-center gap-2">
-            {showStatusDot && hasLink && (
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" title="Online" />
-            )}
             <button
               ref={menuBtnRef}
               type="button"

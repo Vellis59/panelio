@@ -14,3 +14,4 @@ panelioPinned:
   - Monitoring::Uptime Kuma
 panelioCardStyle: panelio
 panelioThemePreset: dark-mirror
+panelioShowStatusDot: true

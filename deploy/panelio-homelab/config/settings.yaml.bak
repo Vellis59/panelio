@@ -12,6 +12,5 @@ panelioShowClock: true
 panelioGreetingName: Vellis
 panelioPinned:
   - Monitoring::Uptime Kuma
-  - Networking::Pi-hole
 panelioCardStyle: panelio
 panelioThemePreset: dark-mirror
