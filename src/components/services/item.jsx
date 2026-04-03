@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import ResolvedIcon from "components/resolvedicon";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SettingsContext } from "utils/contexts/settings";
 import Docker from "widgets/docker/component";
 import Kubernetes from "widgets/kubernetes/component";
@@ -26,6 +26,10 @@ export default function Item({ service, groupName, useEqualHeights }) {
   const isPinned = pinnedKeys.includes(pinKey);
   const cardStyle = settings?.panelioCardStyle || "panelio";
   const isPanelioStyle = cardStyle === "panelio";
+  const showStatusDot = settings?.panelioShowStatusDot === true;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const menuRef = useRef(null);
 
   const togglePin = async (e) => {
     e.preventDefault();
@@ -42,6 +46,28 @@ export default function Item({ service, groupName, useEqualHeights }) {
       }
     } catch {}
   };
+
+  const copyUrl = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (service.href) {
+      navigator.clipboard.writeText(service.href).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      });
+    }
+    setMenuOpen(false);
+  };
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [menuOpen]);
 
   // set stats to closed after 300ms
   const closeStats = () => {
@@ -176,6 +202,42 @@ export default function Item({ service, groupName, useEqualHeights }) {
             )}
           </div>
         </div>
+
+        {/* Quick Actions & status dot */}
+        {isPanelioStyle && (
+          <div className="absolute bottom-2 right-2 z-20 flex items-center gap-2">
+            {showStatusDot && hasLink && (
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm" title="Online" />
+            )}
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMenuOpen(!menuOpen); }}
+              className="opacity-0 group-hover:opacity-100 transition-opacity text-theme-400 dark:text-theme-500 hover:text-theme-600 dark:hover:text-theme-300 text-lg leading-none"
+              title="Quick actions"
+            >
+              {String.fromCharCode(8942)}
+            </button>
+          </div>
+        )}
+        {menuOpen && isPanelioStyle && (
+          <div
+            ref={menuRef}
+            className="absolute bottom-8 right-2 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {service.href && (
+              <button type="button" onClick={copyUrl} className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                {copied ? "Copied!" : "Copy URL"}
+              </button>
+            )}
+            <a href="/admin/dashboard" className="block w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 no-underline">
+              Edit in admin
+            </a>
+            <button type="button" onClick={(e) => { togglePin(e); setMenuOpen(false); }} className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+              {isPinned ? "Unpin" : "Pin to top"}
+            </button>
+          </div>
+        )}
 
         {service.container && service.server && (
           <div
