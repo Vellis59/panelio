@@ -1185,5 +1185,20 @@
         "burned": "Burned",
         "remaining": "Remaining",
         "steps": "Steps"
+    },
+    "panelio": {
+        "overview": {
+            "title": "Resumen de Panelio",
+            "subtitle": "Tu panel de un vistazo",
+            "description": "Panelio gestiona actualmente {{serviceCount}} servicio(s) en {{serviceGroups}} grupo(s).",
+            "openAdmin": "Abrir admin",
+            "cards": {
+                "serviceGroups": "Grupos de servicios",
+                "services": "Servicios",
+                "bookmarkGroups": "Grupos de marcadores",
+                "bookmarks": "Marcadores",
+                "widgets": "Widgets"
+            }
+        }
     }
 }

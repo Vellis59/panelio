@@ -1185,5 +1185,20 @@
         "burned": "Verbrannt",
         "remaining": "Verbleibend",
         "steps": "Schritte"
+    },
+    "panelio": {
+        "overview": {
+            "title": "Panelio-Übersicht",
+            "subtitle": "Dein Dashboard auf einen Blick",
+            "description": "Panelio verwaltet derzeit {{serviceCount}} Dienst(e) in {{serviceGroups}} Gruppe(n).",
+            "openAdmin": "Admin öffnen",
+            "cards": {
+                "serviceGroups": "Dienstgruppen",
+                "services": "Dienste",
+                "bookmarkGroups": "Lesezeichengruppen",
+                "bookmarks": "Lesezeichen",
+                "widgets": "Widgets"
+            }
+        }
     }
 }
