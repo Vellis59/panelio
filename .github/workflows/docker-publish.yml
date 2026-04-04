@@ -44,12 +44,13 @@ jobs:
             type=schedule,pattern=nightly
             type=ref,event=branch
             type=ref,event=tag
+            type=raw,value=latest,enable={{is_default_branch}}
             # Versioning tags
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
           flavor: |
-            latest=auto
+            latest=false
 
       - name: Next.js build cache
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
