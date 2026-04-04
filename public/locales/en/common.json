@@ -331,14 +331,14 @@
         "total": "Total"
     },
     "suwayomi": {
-      "download": "Downloaded",
-      "nondownload": "Non-Downloaded",
-      "read": "Read",
-      "unread": "Unread",
-      "downloadedread": "Downloaded & Read",
-      "downloadedunread": "Downloaded & Unread",
-      "nondownloadedread": "Non-Downloaded & Read",
-      "nondownloadedunread": "Non-Downloaded & Unread"
+        "download": "Downloaded",
+        "nondownload": "Non-Downloaded",
+        "read": "Read",
+        "unread": "Unread",
+        "downloadedread": "Downloaded & Read",
+        "downloadedunread": "Downloaded & Unread",
+        "nondownloadedread": "Non-Downloaded & Read",
+        "nondownloadedunread": "Non-Downloaded & Unread"
     },
     "tailscale": {
         "address": "Address",
@@ -857,7 +857,7 @@
         "ping": "Ping"
     },
     "urbackup": {
-        "ok" : "Ok",
+        "ok": "Ok",
         "errored": "Errors",
         "noRecent": "Out of Date",
         "totalUsed": "Used Storage"
@@ -915,14 +915,14 @@
         "totalfilesize": "Total Size"
     },
     "mailcow": {
-      "domains": "Domains",
-      "mailboxes": "Mailboxes",
-      "mails": "Mails",
-      "storage": "Storage"
+        "domains": "Domains",
+        "mailboxes": "Mailboxes",
+        "mails": "Mails",
+        "storage": "Storage"
     },
     "netdata": {
-      "warnings": "Warnings",
-      "criticals": "Criticals"
+        "warnings": "Warnings",
+        "criticals": "Criticals"
     },
     "plantit": {
         "events": "Events",
@@ -931,10 +931,10 @@
         "species": "Species"
     },
     "gitea": {
-      "notifications": "Notifications",
-      "issues": "Issues",
-      "pulls": "Pull Requests",
-      "repositories": "Repositories"
+        "notifications": "Notifications",
+        "issues": "Issues",
+        "pulls": "Pull Requests",
+        "repositories": "Repositories"
     },
     "stash": {
         "scenes": "Scenes",
@@ -1004,48 +1004,48 @@
         "tags": "Tags"
     },
     "zabbix": {
-      "unclassified": "Not classified",
-      "information": "Information",
-      "warning": "Warning",
-      "average": "Average",
-      "high": "High",
-      "disaster": "Disaster"
+        "unclassified": "Not classified",
+        "information": "Information",
+        "warning": "Warning",
+        "average": "Average",
+        "high": "High",
+        "disaster": "Disaster"
     },
     "lubelogger": {
-      "vehicle": "Vehicle",
-      "vehicles": "Vehicles",
-      "serviceRecords": "Service Records",
-      "reminders": "Reminders",
-      "nextReminder": "Next Reminder",
-      "none": "None"
+        "vehicle": "Vehicle",
+        "vehicles": "Vehicles",
+        "serviceRecords": "Service Records",
+        "reminders": "Reminders",
+        "nextReminder": "Next Reminder",
+        "none": "None"
     },
     "vikunja": {
-      "projects": "Active Projects",
-      "tasks7d": "Tasks Due This Week",
-      "tasksOverdue": "Overdue Tasks",
-      "tasksInProgress": "Tasks In Progress"
+        "projects": "Active Projects",
+        "tasks7d": "Tasks Due This Week",
+        "tasksOverdue": "Overdue Tasks",
+        "tasksInProgress": "Tasks In Progress"
     },
     "headscale": {
-      "name": "Name",
-      "address": "Address",
-      "last_seen": "Last Seen",
-      "status": "Status",
-      "online": "Online",
-      "offline": "Offline"
+        "name": "Name",
+        "address": "Address",
+        "last_seen": "Last Seen",
+        "status": "Status",
+        "online": "Online",
+        "offline": "Offline"
     },
     "beszel": {
-      "name": "Name",
-      "systems": "Systems",
-      "up": "Up",
-      "down": "Down",
-      "paused": "Paused",
-      "pending": "Pending",
-      "status": "Status",
-      "updated": "Updated",
-      "cpu": "CPU",
-      "memory": "MEM",
-      "disk": "Disk",
-      "network": "NET"
+        "name": "Name",
+        "systems": "Systems",
+        "up": "Up",
+        "down": "Down",
+        "paused": "Paused",
+        "pending": "Pending",
+        "status": "Status",
+        "updated": "Updated",
+        "cpu": "CPU",
+        "memory": "MEM",
+        "disk": "Disk",
+        "network": "NET"
     },
     "argocd": {
         "apps": "Apps",
@@ -1069,8 +1069,8 @@
     "apcups": {
         "status": "Status",
         "load": "Load",
-        "bcharge":"Battery Charge",
-        "timeleft":"Time Left"
+        "bcharge": "Battery Charge",
+        "timeleft": "Time Left"
     },
     "karakeep": {
         "bookmarks": "Bookmarks",
@@ -1155,9 +1155,9 @@
         "bytes_added_30": "Bytes Added"
     },
     "yourspotify": {
-      "songs": "Songs",
-      "time":  "Time",
-      "artists": "Artists"
+        "songs": "Songs",
+        "time": "Time",
+        "artists": "Artists"
     },
     "arcane": {
         "containers": "Containers",
@@ -1185,5 +1185,86 @@
         "burned": "Burned",
         "remaining": "Remaining",
         "steps": "Steps"
+    },
+    "panelio": {
+        "overview": {
+            "title": "Panelio Overview",
+            "subtitle": "Your dashboard at a glance",
+            "description": "Panelio is currently managing {{serviceCount}} service(s) across {{serviceGroups}} group(s).",
+            "openAdmin": "Open Admin",
+            "cards": {
+                "serviceGroups": "Service groups",
+                "services": "Services",
+                "bookmarkGroups": "Bookmark groups",
+                "bookmarks": "Bookmarks",
+                "widgets": "Widgets"
+            }
+        },
+        "admin": {
+            "title": "Panelio Admin",
+            "login": {
+                "passwordPlaceholder": "Admin password",
+                "loginButton": "Login",
+                "loginFailed": "Login failed",
+                "networkError": "Network error",
+                "hint": "Set PANELIO_ADMIN_PASSWORD to enable admin"
+            },
+            "nav": {
+                "services": "Services",
+                "bookmarks": "Bookmarks",
+                "widgets": "Widgets",
+                "settings": "Settings",
+                "preview": "Preview",
+                "backup": "Backup",
+                "viewHomepage": "← View Homepage",
+                "logout": "Logout"
+            },
+            "common": {
+                "loading": "Loading...",
+                "save": "Save",
+                "cancel": "Cancel",
+                "rename": "Rename",
+                "delete": "Delete",
+                "edit": "Edit",
+                "create": "Create"
+            },
+            "backup": {
+                "title": "Import / Export",
+                "exportTitle": "📥 Export Configuration",
+                "exportDescription": "Download all config files (services, bookmarks, widgets, settings, custom CSS/JS) as a single JSON bundle.",
+                "downloadBackup": "Download Backup",
+                "importTitle": "📤 Import Configuration",
+                "importDescription": "Restore from a previously exported JSON backup. This will overwrite existing config files!",
+                "importing": "Importing...",
+                "chooseFile": "Choose Backup File",
+                "importFailed": "Import failed",
+                "importSuccess": "✅ Import successful!",
+                "imported": "Imported",
+                "warning": "⚠️ Warning:",
+                "warningText": "Importing will overwrite your current configuration. Auto-backups are saved as .bak files, but export first to be safe."
+            },
+            "dashboard": {
+                "livePreview": "Live Preview",
+                "widgets": "Widgets",
+                "settings": "Settings",
+                "addGroup": "+ Add Group",
+                "addWidget": "+ Add Widget",
+                "saveSettings": "Save Settings",
+                "saving": "Saving...",
+                "saved": "✅ Saved!"
+            },
+            "forms": {
+                "editService": "Edit Service",
+                "addService": "Add Service",
+                "editBookmark": "Edit Bookmark",
+                "addBookmark": "Add Bookmark",
+                "nameRequired": "Name *",
+                "urlRequired": "URL *",
+                "description": "Description",
+                "iconPlaceholder": "Icon (e.g. si-plex)",
+                "pingUrl": "Ping URL",
+                "abbr": "Abbr"
+            }
+        }
     }
 }

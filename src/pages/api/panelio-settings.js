@@ -9,6 +9,10 @@ export default async function handler(req, res) {
       panelioThemePreset: settings.panelioThemePreset || "dark-mirror",
       panelioCardStyle: settings.panelioCardStyle || "panelio",
       panelioShowStatusDot: settings.panelioShowStatusDot === true,
+      panelioGreetingName: settings.panelioGreetingName || "",
+      panelioShowGreeting: settings.panelioShowGreeting !== false,
+      panelioShowClock: settings.panelioShowClock !== false,
+      language: settings.language || "en",
     });
   } catch {
     return res.status(200).json({
@@ -17,6 +21,10 @@ export default async function handler(req, res) {
       panelioThemePreset: "dark-mirror",
       panelioCardStyle: "panelio",
       panelioShowStatusDot: false,
+      panelioGreetingName: "",
+      panelioShowGreeting: true,
+      panelioShowClock: true,
+      language: "en",
     });
   }
 }

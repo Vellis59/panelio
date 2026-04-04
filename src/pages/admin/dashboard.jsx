@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import BackupTab from "components/admin/BackupTab";
 
 export function normalizeUserUrl(value) {
@@ -24,6 +26,7 @@ export function normalizeUserUrl(value) {
 
 // --- Service Form Component ---
 function ServiceForm({ group, service, onSave, onCancel }) {
+  const { t } = useTranslation("common");
   const [name, setName] = useState(service ? Object.keys(service)[0] : "");
   const existing = service ? service[Object.keys(service)[0]] : {};
   const [href, setHref] = useState(existing.href || "");
@@ -34,28 +37,28 @@ function ServiceForm({ group, service, onSave, onCancel }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border dark:border-gray-700 mb-3">
       <h4 className="font-medium mb-3 text-gray-700 dark:text-gray-200">
-        {service ? "Edit Service" : "Add Service"}
+        {service ? t("panelio.admin.forms.editService") : t("panelio.admin.forms.addService")}
       </h4>
       <div className="grid grid-cols-2 gap-3">
-        <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.nameRequired")} value={name} onChange={(e) => setName(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="URL *" value={href} onChange={(e) => setHref(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.urlRequired")} value={href} onChange={(e) => setHref(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.description")} value={description} onChange={(e) => setDescription(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Icon (e.g. si-plex)" value={icon} onChange={(e) => setIcon(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.iconPlaceholder")} value={icon} onChange={(e) => setIcon(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Ping URL" value={ping} onChange={(e) => setPing(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.pingUrl")} value={ping} onChange={(e) => setPing(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
         <button onClick={() => onSave({ name, href: normalizeUserUrl(href), description, icon, ping: normalizeUserUrl(ping) })} disabled={!name || !href}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
-          Save
+          {t("panelio.admin.common.save")}
         </button>
         <button onClick={onCancel}
           className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded text-sm">
-          Cancel
+          {t("panelio.admin.common.cancel")}
         </button>
       </div>
     </div>
@@ -64,6 +67,7 @@ function ServiceForm({ group, service, onSave, onCancel }) {
 
 // --- Bookmark Form Component ---
 function BookmarkForm({ bookmark, onSave, onCancel }) {
+  const { t } = useTranslation("common");
   const [name, setName] = useState(bookmark ? Object.keys(bookmark)[0] : "");
   const existing = bookmark ? bookmark[Object.keys(bookmark)[0]][0] : {};
   const [abbr, setAbbr] = useState(existing.abbr || "");
@@ -72,24 +76,24 @@ function BookmarkForm({ bookmark, onSave, onCancel }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border dark:border-gray-700 mb-3">
       <h4 className="font-medium mb-3 text-gray-700 dark:text-gray-200">
-        {bookmark ? "Edit Bookmark" : "Add Bookmark"}
+        {bookmark ? t("panelio.admin.forms.editBookmark") : t("panelio.admin.forms.addBookmark")}
       </h4>
       <div className="grid grid-cols-3 gap-3">
-        <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.nameRequired")} value={name} onChange={(e) => setName(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Abbr" value={abbr} onChange={(e) => setAbbr(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.abbr")} value={abbr} onChange={(e) => setAbbr(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="URL *" value={href} onChange={(e) => setHref(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.urlRequired")} value={href} onChange={(e) => setHref(e.target.value)}
           className="col-span-3 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
         <button onClick={() => onSave({ name, abbr, href: normalizeUserUrl(href) })} disabled={!name || !href}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
-          Save
+          {t("panelio.admin.common.save")}
         </button>
         <button onClick={onCancel}
           className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded text-sm">
-          Cancel
+          {t("panelio.admin.common.cancel")}
         </button>
       </div>
     </div>
@@ -171,7 +175,16 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
 }
 
 // --- Main Dashboard ---
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || "en", ["common"])),
+    },
+  };
+}
+
 export default function AdminDashboard() {
+  const { t } = useTranslation("common");
   const router = useRouter();
   const [tab, setTab] = useState("services");
   const [services, setServices] = useState([]);
@@ -388,29 +401,29 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center text-gray-500">Loading...</div>;
+    return <div className="flex min-h-screen items-center justify-center text-gray-500">{t("panelio.admin.common.loading")}</div>;
   }
 
   const tabs = [
-    { id: "services", label: "Services", icon: "📦" },
-    { id: "bookmarks", label: "Bookmarks", icon: "🔖" },
-    { id: "widgets", label: "Widgets", icon: "🧩" },
-    { id: "settings", label: "Settings", icon: "⚙️" },
-    { id: "preview", label: "Preview", icon: "👁️" },
-    { id: "backup", label: "Backup", icon: "💾" },
+    { id: "services", label: t("panelio.admin.nav.services"), icon: "📦" },
+    { id: "bookmarks", label: t("panelio.admin.nav.bookmarks"), icon: "🔖" },
+    { id: "widgets", label: t("panelio.admin.nav.widgets"), icon: "🧩" },
+    { id: "settings", label: t("panelio.admin.nav.settings"), icon: "⚙️" },
+    { id: "preview", label: t("panelio.admin.nav.preview"), icon: "👁️" },
+    { id: "backup", label: t("panelio.admin.nav.backup"), icon: "💾" },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Head>
-        <title>Panelio Admin</title>
+        <title>{t("panelio.admin.title")}</title>
       </Head>
 
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">Panelio Admin</h1>
+            <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">{t("panelio.admin.title")}</h1>
             <nav className="flex gap-1">
               {tabs.map((t) => (
                 <button
@@ -428,8 +441,8 @@ export default function AdminDashboard() {
             </nav>
           </div>
           <div className="flex items-center gap-3">
-            <a href="/" className="text-sm text-blue-600 hover:underline">← View Homepage</a>
-            <button onClick={logout} className="text-sm text-gray-500 hover:text-red-500">Logout</button>
+            <a href="/" className="text-sm text-blue-600 hover:underline">{t("panelio.admin.nav.viewHomepage")}</a>
+            <button onClick={logout} className="text-sm text-gray-500 hover:text-red-500">{t("panelio.admin.nav.logout")}</button>
           </div>
         </div>
       </header>
@@ -448,7 +461,7 @@ export default function AdminDashboard() {
         {/* Preview Tab */}
         {tab === "preview" && (
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Live Preview</h2>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{t("panelio.admin.dashboard.livePreview")}</h2>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
               <iframe
                 src="/"
@@ -477,7 +490,7 @@ export default function AdminDashboard() {
                 className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
               />
               <button onClick={addGroup} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-                + Add Group
+                {t("panelio.admin.dashboard.addGroup")}
               </button>
             </div>
 
@@ -666,7 +679,7 @@ export default function AdminDashboard() {
                 className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
               />
               <button onClick={addBookmarkGroup} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-                + Add Group
+                {t("panelio.admin.dashboard.addGroup")}
               </button>
             </div>
 
@@ -846,6 +859,7 @@ function WidgetForm({ widget, index, onSave, onCancel }) {
 }
 
 function WidgetsTab() {
+  const { t } = useTranslation("common");
   const [widgets, setWidgets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
@@ -890,14 +904,14 @@ function WidgetsTab() {
     fetchWidgets();
   };
 
-  if (loading) return <p className="text-gray-400 text-center py-8">Loading...</p>;
+  if (loading) return <p className="text-gray-400 text-center py-8">{t("panelio.admin.common.loading")}</p>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Widgets</h2>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t("panelio.admin.dashboard.widgets")}</h2>
         <button onClick={() => setAdding(true)} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-          + Add Widget
+          {t("panelio.admin.dashboard.addWidget")}
         </button>
       </div>
 
@@ -940,6 +954,7 @@ function WidgetsTab() {
 
 // --- Settings Tab Component ---
 function SettingsTab() {
+  const { t } = useTranslation("common");
   const [settings, setSettings] = useState({});
   const [json, setJson] = useState("");
   const [overviewTitle, setOverviewTitle] = useState("");
@@ -1014,17 +1029,17 @@ function SettingsTab() {
     }
   };
 
-  if (loading) return <p className="text-gray-400 text-center py-8">Loading...</p>;
+  if (loading) return <p className="text-gray-400 text-center py-8">{t("panelio.admin.common.loading")}</p>;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Settings</h2>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t("panelio.admin.dashboard.settings")}</h2>
         <div className="flex gap-2 items-center">
-          {success && <span className="text-green-500 text-sm">✅ Saved!</span>}
+          {success && <span className="text-green-500 text-sm">{t("panelio.admin.dashboard.saved")}</span>}
           <button onClick={saveSettings} disabled={saving}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
-            {saving ? "Saving..." : "Save Settings"}
+            {saving ? t("panelio.admin.dashboard.saving") : t("panelio.admin.dashboard.saveSettings")}
           </button>
         </div>
       </div>

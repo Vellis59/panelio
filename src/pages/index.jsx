@@ -45,22 +45,29 @@ const Version = dynamic(() => import("components/version"), {
 const rightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime"];
 
 function PanelioOverview({ services, bookmarks, widgets, cardBlur, settings }) {
+  const { t } = useTranslation("common");
   const serviceGroups = services?.length || 0;
   const serviceCount = services?.reduce((sum, group) => sum + (group.services?.length || 0), 0) || 0;
   const bookmarkGroups = bookmarks?.length || 0;
   const bookmarkCount = bookmarks?.reduce((sum, group) => sum + (group.bookmarks?.length || 0), 0) || 0;
   const widgetCount = widgets?.length || 0;
 
-  const title = settings?.panelioOverviewTitle || "Panelio Overview";
-  const subtitle = settings?.panelioOverviewSubtitle || "Your dashboard at a glance";
-  const description = settings?.panelioOverviewDescription || `Panelio is currently managing ${serviceCount} service${serviceCount === 1 ? "" : "s"} across ${serviceGroups} group${serviceGroups === 1 ? "" : "s"}.`;
+  const title = settings?.panelioOverviewTitle || t("panelio.overview.title");
+  const subtitle = settings?.panelioOverviewSubtitle || t("panelio.overview.subtitle");
+  const description =
+    settings?.panelioOverviewDescription ||
+    t("panelio.overview.description", {
+      serviceCount,
+      serviceGroups,
+      defaultValue: `Panelio is currently managing ${serviceCount} service${serviceCount === 1 ? "" : "s"} across ${serviceGroups} group${serviceGroups === 1 ? "" : "s"}.`,
+    });
 
   const cards = [
-    { label: "Service groups", value: serviceGroups },
-    { label: "Services", value: serviceCount },
-    { label: "Bookmark groups", value: bookmarkGroups },
-    { label: "Bookmarks", value: bookmarkCount },
-    { label: "Widgets", value: widgetCount },
+    { label: t("panelio.overview.cards.serviceGroups"), value: serviceGroups },
+    { label: t("panelio.overview.cards.services"), value: serviceCount },
+    { label: t("panelio.overview.cards.bookmarkGroups"), value: bookmarkGroups },
+    { label: t("panelio.overview.cards.bookmarks"), value: bookmarkCount },
+    { label: t("panelio.overview.cards.widgets"), value: widgetCount },
   ];
 
   return (
@@ -89,7 +96,7 @@ function PanelioOverview({ services, bookmarks, widgets, cardBlur, settings }) {
               href="/admin"
               className="inline-flex items-center rounded-lg bg-theme-700 px-4 py-2 text-sm font-medium text-white hover:bg-theme-800 transition"
             >
-              Open Admin
+              {t("panelio.overview.openAdmin")}
             </a>
           </div>
         </div>
@@ -285,7 +292,7 @@ function Home({ initialSettings }) {
   const { color, setColor } = useContext(ColorContext);
   const { settings, setSettings } = useContext(SettingsContext);
   const { activeTab, setActiveTab } = useContext(TabContext);
-  const { asPath } = useRouter();
+  const { asPath, locale } = useRouter();
 
   useEffect(() => {
     setSettings(initialSettings);
@@ -307,8 +314,8 @@ function Home({ initialSettings }) {
   }, [liveThemeSettings, setSettings]);
 
   useEffect(() => {
-    const language = normalizeLanguage(settings.language);
-    if (language) {
+    const language = normalizeLanguage(locale || settings.language);
+    if (language && i18n.language !== language) {
       i18n.changeLanguage(language);
     }
 
@@ -319,7 +326,7 @@ function Home({ initialSettings }) {
     if (settings.color && color !== settings.color) {
       setColor(settings.color);
     }
-  }, [i18n, settings, color, setColor, theme, setTheme]);
+  }, [i18n, locale, settings, color, setColor, theme, setTheme]);
 
   const [searching, setSearching] = useState(false);
   const [searchString, setSearchString] = useState("");

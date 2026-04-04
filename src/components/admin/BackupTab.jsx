@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "next-i18next";
 
 // --- Backup Tab Component ---
 export default function BackupTab() {
+  const { t } = useTranslation("common");
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
@@ -9,7 +11,7 @@ export default function BackupTab() {
   const handleExport = () => {
     fetch("/api/admin/export", { credentials: "same-origin" })
       .then((r) => {
-        if (!r.ok) throw new Error("Export failed: " + r.status);
+        if (!r.ok) throw new Error(t("panelio.admin.backup.importFailed") + ": " + r.status);
         return r.blob();
       })
       .then((blob) => {
@@ -43,7 +45,7 @@ export default function BackupTab() {
       if (res.ok) {
         setResult(data);
       } else {
-        setError(data.error || "Import failed");
+        setError(data.error || t("panelio.admin.backup.importFailed"));
       }
     } catch (e) {
       setError(e.message);
@@ -55,37 +57,37 @@ export default function BackupTab() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Import / Export</h2>
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">{t("panelio.admin.backup.title")}</h2>
 
       <div className="grid grid-cols-2 gap-6">
         {/* Export */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-2">📥 Export Configuration</h3>
+          <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-2">{t("panelio.admin.backup.exportTitle")}</h3>
           <p className="text-sm text-gray-500 mb-4">
-            Download all config files (services, bookmarks, widgets, settings, custom CSS/JS) as a single JSON bundle.
+            {t("panelio.admin.backup.exportDescription")}
           </p>
           <button onClick={handleExport}
             className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-            Download Backup
+            {t("panelio.admin.backup.downloadBackup")}
           </button>
         </div>
 
         {/* Import */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-2">📤 Import Configuration</h3>
+          <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-2">{t("panelio.admin.backup.importTitle")}</h3>
           <p className="text-sm text-gray-500 mb-4">
-            Restore from a previously exported JSON backup. This will overwrite existing config files!
+            {t("panelio.admin.backup.importDescription")}
           </p>
           <label className={`inline-block px-4 py-2 rounded text-sm text-white cursor-pointer ${importing ? "bg-gray-400" : "bg-orange-600 hover:bg-orange-700"}`}>
-            {importing ? "Importing..." : "Choose Backup File"}
+            {importing ? t("panelio.admin.backup.importing") : t("panelio.admin.backup.chooseFile")}
             <input type="file" accept=".json" onChange={handleImport} className="hidden" disabled={importing} />
           </label>
           {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
           {result && (
             <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/30 rounded text-sm">
-              <p className="text-green-700 dark:text-green-300 font-medium">✅ Import successful!</p>
+              <p className="text-green-700 dark:text-green-300 font-medium">{t("panelio.admin.backup.importSuccess")}</p>
               <p className="text-green-600 dark:text-green-400 text-xs mt-1">
-                Imported: {result.imported?.join(", ")}
+                {t("panelio.admin.backup.imported")}: {result.imported?.join(", ")}
               </p>
             </div>
           )}
@@ -94,7 +96,7 @@ export default function BackupTab() {
 
       <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
         <p className="text-sm text-yellow-700 dark:text-yellow-300">
-          ⚠️ <strong>Warning:</strong> Importing will overwrite your current configuration. Auto-backups are saved as <code>.bak</code> files, but export first to be safe.
+          {t("panelio.admin.backup.warning")} <strong></strong> {t("panelio.admin.backup.warningText")}
         </p>
       </div>
     </div>
