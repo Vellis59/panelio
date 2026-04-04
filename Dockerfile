@@ -31,11 +31,11 @@ RUN if [ "$CI" != "true" ]; then \
 # Runtime Stage
 # =========================
 FROM node:22-alpine AS runner
-LABEL org.opencontainers.image.title="Homepage"
-LABEL org.opencontainers.image.description="A self-hosted services landing page, with docker and service integrations."
-LABEL org.opencontainers.image.url="https://github.com/gethomepage/homepage"
-LABEL org.opencontainers.image.documentation='https://github.com/gethomepage/homepage/wiki'
-LABEL org.opencontainers.image.source='https://github.com/gethomepage/homepage'
+LABEL org.opencontainers.image.title="Panelio"
+LABEL org.opencontainers.image.description="Panelio — A self-hosted services dashboard with admin UI, based on Homepage."
+LABEL org.opencontainers.image.url="https://github.com/Vellis59/homepage-admin"
+LABEL org.opencontainers.image.documentation='https://github.com/Vellis59/homepage-admin'
+LABEL org.opencontainers.image.source='https://github.com/Vellis59/homepage-admin'
 LABEL org.opencontainers.image.licenses='Apache-2.0'
 
 # Setup
