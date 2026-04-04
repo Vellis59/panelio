@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import BackupTab from "components/admin/BackupTab";
 
 export function normalizeUserUrl(value) {
@@ -172,6 +173,14 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
 }
 
 // --- Main Dashboard ---
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || "en", ["common"])),
+    },
+  };
+}
+
 export default function AdminDashboard() {
   const { t } = useTranslation("common");
   const router = useRouter();
