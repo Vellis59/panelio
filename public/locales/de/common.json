@@ -1252,6 +1252,18 @@
                 "saveSettings": "Einstellungen speichern",
                 "saving": "Speichert...",
                 "saved": "✅ Gespeichert!"
+            },
+            "forms": {
+                "editService": "Dienst bearbeiten",
+                "addService": "Dienst hinzufügen",
+                "editBookmark": "Lesezeichen bearbeiten",
+                "addBookmark": "Lesezeichen hinzufügen",
+                "nameRequired": "Name *",
+                "urlRequired": "URL *",
+                "description": "Beschreibung",
+                "iconPlaceholder": "Icon (z. B. si-plex)",
+                "pingUrl": "Ping-URL",
+                "abbr": "Abk."
             }
         }
     }

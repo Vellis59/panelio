@@ -1252,6 +1252,18 @@
                 "saveSettings": "Save Settings",
                 "saving": "Saving...",
                 "saved": "✅ Saved!"
+            },
+            "forms": {
+                "editService": "Edit Service",
+                "addService": "Add Service",
+                "editBookmark": "Edit Bookmark",
+                "addBookmark": "Add Bookmark",
+                "nameRequired": "Name *",
+                "urlRequired": "URL *",
+                "description": "Description",
+                "iconPlaceholder": "Icon (e.g. si-plex)",
+                "pingUrl": "Ping URL",
+                "abbr": "Abbr"
             }
         }
     }

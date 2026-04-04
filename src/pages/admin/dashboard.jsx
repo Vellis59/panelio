@@ -26,6 +26,7 @@ export function normalizeUserUrl(value) {
 
 // --- Service Form Component ---
 function ServiceForm({ group, service, onSave, onCancel }) {
+  const { t } = useTranslation("common");
   const [name, setName] = useState(service ? Object.keys(service)[0] : "");
   const existing = service ? service[Object.keys(service)[0]] : {};
   const [href, setHref] = useState(existing.href || "");
@@ -36,28 +37,28 @@ function ServiceForm({ group, service, onSave, onCancel }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border dark:border-gray-700 mb-3">
       <h4 className="font-medium mb-3 text-gray-700 dark:text-gray-200">
-        {service ? "Edit Service" : "Add Service"}
+        {service ? t("panelio.admin.forms.editService") : t("panelio.admin.forms.addService")}
       </h4>
       <div className="grid grid-cols-2 gap-3">
-        <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.nameRequired")} value={name} onChange={(e) => setName(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="URL *" value={href} onChange={(e) => setHref(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.urlRequired")} value={href} onChange={(e) => setHref(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.description")} value={description} onChange={(e) => setDescription(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Icon (e.g. si-plex)" value={icon} onChange={(e) => setIcon(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.iconPlaceholder")} value={icon} onChange={(e) => setIcon(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Ping URL" value={ping} onChange={(e) => setPing(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.pingUrl")} value={ping} onChange={(e) => setPing(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
         <button onClick={() => onSave({ name, href: normalizeUserUrl(href), description, icon, ping: normalizeUserUrl(ping) })} disabled={!name || !href}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
-          Save
+          {t("panelio.admin.common.save")}
         </button>
         <button onClick={onCancel}
           className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded text-sm">
-          Cancel
+          {t("panelio.admin.common.cancel")}
         </button>
       </div>
     </div>
@@ -66,6 +67,7 @@ function ServiceForm({ group, service, onSave, onCancel }) {
 
 // --- Bookmark Form Component ---
 function BookmarkForm({ bookmark, onSave, onCancel }) {
+  const { t } = useTranslation("common");
   const [name, setName] = useState(bookmark ? Object.keys(bookmark)[0] : "");
   const existing = bookmark ? bookmark[Object.keys(bookmark)[0]][0] : {};
   const [abbr, setAbbr] = useState(existing.abbr || "");
@@ -74,24 +76,24 @@ function BookmarkForm({ bookmark, onSave, onCancel }) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border dark:border-gray-700 mb-3">
       <h4 className="font-medium mb-3 text-gray-700 dark:text-gray-200">
-        {bookmark ? "Edit Bookmark" : "Add Bookmark"}
+        {bookmark ? t("panelio.admin.forms.editBookmark") : t("panelio.admin.forms.addBookmark")}
       </h4>
       <div className="grid grid-cols-3 gap-3">
-        <input placeholder="Name *" value={name} onChange={(e) => setName(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.nameRequired")} value={name} onChange={(e) => setName(e.target.value)}
           className="col-span-2 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="Abbr" value={abbr} onChange={(e) => setAbbr(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.abbr")} value={abbr} onChange={(e) => setAbbr(e.target.value)}
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
-        <input placeholder="URL *" value={href} onChange={(e) => setHref(e.target.value)}
+        <input placeholder={t("panelio.admin.forms.urlRequired")} value={href} onChange={(e) => setHref(e.target.value)}
           className="col-span-3 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
         <button onClick={() => onSave({ name, abbr, href: normalizeUserUrl(href) })} disabled={!name || !href}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
-          Save
+          {t("panelio.admin.common.save")}
         </button>
         <button onClick={onCancel}
           className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded text-sm">
-          Cancel
+          {t("panelio.admin.common.cancel")}
         </button>
       </div>
     </div>

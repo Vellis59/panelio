@@ -1252,6 +1252,18 @@
                 "saveSettings": "Enregistrer les paramètres",
                 "saving": "Enregistrement...",
                 "saved": "✅ Enregistré !"
+            },
+            "forms": {
+                "editService": "Modifier le service",
+                "addService": "Ajouter un service",
+                "editBookmark": "Modifier le favori",
+                "addBookmark": "Ajouter un favori",
+                "nameRequired": "Nom *",
+                "urlRequired": "URL *",
+                "description": "Description",
+                "iconPlaceholder": "Icône (ex. si-plex)",
+                "pingUrl": "URL de ping",
+                "abbr": "Abrév."
             }
         }
     }
