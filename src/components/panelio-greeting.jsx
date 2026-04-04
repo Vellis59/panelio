@@ -39,7 +39,7 @@ export default function PanelioGreeting({ settings }) {
   }, []);
 
   const hour = now.getHours();
-  const language = settings?.language || i18n?.language || "en";
+  const language = i18n?.resolvedLanguage || i18n?.language || settings?.language || "en";
   const greeting = getGreeting(hour, language);
   const name = settings?.panelioGreetingName || "";
   const showClock = settings?.panelioShowClock !== false;
