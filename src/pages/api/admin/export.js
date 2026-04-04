@@ -1,4 +1,5 @@
 import { requireAdmin } from "utils/admin/auth";
+import { isDemo } from "utils/admin/demo";
 import { readConfig, writeConfig } from "utils/admin/yaml-crud";
 import { promises as fs } from "fs";
 import path from "path";
@@ -6,14 +7,14 @@ import { CONF_DIR } from "utils/config/config";
 
 /**
  * /api/admin/export - GET: export all config as JSON bundle
- * /api/admin/import - POST: import config bundle
+ * /api/admin/import - POST: import config bundle (blocked in demo mode)
  */
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   try {
     if (req.method === "GET") {
-      // Export all config files
+      // Export all config files (allowed in demo mode)
       const configFiles = ["services.yaml", "bookmarks.yaml", "settings.yaml", "widgets.yaml", "docker.yaml", "kubernetes.yaml"];
       const bundle = {};
 
@@ -43,7 +44,11 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
-      // Import config bundle
+      // Import config bundle - BLOCKED in demo mode
+      if (isDemo()) {
+        return res.status(403).json({ error: "Demo mode: imports are disabled" });
+      }
+
       const { config } = req.body;
       if (!config || typeof config !== "object") {
         return res.status(400).json({ error: "Missing config bundle" });

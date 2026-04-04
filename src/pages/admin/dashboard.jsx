@@ -25,7 +25,7 @@ export function normalizeUserUrl(value) {
 }
 
 // --- Service Form Component ---
-function ServiceForm({ group, service, onSave, onCancel }) {
+function ServiceForm({ group, service, onSave, onCancel, demoMode }) {
   const { t } = useTranslation("common");
   const [name, setName] = useState(service ? Object.keys(service)[0] : "");
   const existing = service ? service[Object.keys(service)[0]] : {};
@@ -52,7 +52,8 @@ function ServiceForm({ group, service, onSave, onCancel }) {
           className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
-        <button onClick={() => onSave({ name, href: normalizeUserUrl(href), description, icon, ping: normalizeUserUrl(ping) })} disabled={!name || !href}
+        <button onClick={() => onSave({ name, href: normalizeUserUrl(href), description, icon, ping: normalizeUserUrl(ping) })} disabled={!name || !href || demoMode}
+          title={demoMode ? "Disabled in demo mode" : ""}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
           {t("panelio.admin.common.save")}
         </button>
@@ -66,7 +67,7 @@ function ServiceForm({ group, service, onSave, onCancel }) {
 }
 
 // --- Bookmark Form Component ---
-function BookmarkForm({ bookmark, onSave, onCancel }) {
+function BookmarkForm({ bookmark, onSave, onCancel, demoMode }) {
   const { t } = useTranslation("common");
   const [name, setName] = useState(bookmark ? Object.keys(bookmark)[0] : "");
   const existing = bookmark ? bookmark[Object.keys(bookmark)[0]][0] : {};
@@ -87,7 +88,8 @@ function BookmarkForm({ bookmark, onSave, onCancel }) {
           className="col-span-3 px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm" />
       </div>
       <div className="flex gap-2 mt-3">
-        <button onClick={() => onSave({ name, abbr, href: normalizeUserUrl(href) })} disabled={!name || !href}
+        <button onClick={() => onSave({ name, abbr, href: normalizeUserUrl(href) })} disabled={!name || !href || demoMode}
+          title={demoMode ? "Disabled in demo mode" : ""}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
           {t("panelio.admin.common.save")}
         </button>
@@ -136,6 +138,7 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
           <ServiceForm
             onSave={(data) => saveNewService(groupName, data, subgroupName)}
             onCancel={() => setAddingServiceToSubgroup(null)}
+            demoMode={demoMode}
           />
         )}
         {subItems.map((svc, idx) => {
@@ -149,6 +152,7 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
                   service={svc}
                   onSave={(data) => { updateService(groupName, svcName, data, subgroupName); setEditingService(null); }}
                   onCancel={() => setEditingService(null)}
+                  demoMode={demoMode}
                 />
               ) : (
                 <div className="flex items-center justify-between py-1.5 px-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
@@ -175,15 +179,16 @@ function SubgroupSection({ groupName, subgroupName, subItems, editingService, se
 }
 
 // --- Main Dashboard ---
-export async function getStaticProps({ locale }) {
+export async function getServerSideProps({ locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale || "en", ["common"])),
+      demoMode: process.env.DEMO_MODE === "true",
     },
   };
 }
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ demoMode }) {
   const { t } = useTranslation("common");
   const router = useRouter();
   const [tab, setTab] = useState("services");
@@ -447,15 +452,22 @@ export default function AdminDashboard() {
         </div>
       </header>
 
+      {/* Demo Mode Banner */}
+      {demoMode && (
+        <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 to-blue-600 text-white px-4 py-3 text-center font-medium shadow-lg">
+          🎯 Demo Mode — You can browse the admin but changes won't be saved
+        </div>
+      )}
+
       <main className="max-w-5xl mx-auto px-4 py-6">
         {/* Widgets Tab */}
         {tab === "widgets" && (
-          <WidgetsTab />
+          <WidgetsTab demoMode={demoMode} />
         )}
 
         {/* Settings Tab */}
         {tab === "settings" && (
-          <SettingsTab />
+          <SettingsTab demoMode={demoMode} />
         )}
 
         {/* Preview Tab */}
@@ -475,7 +487,7 @@ export default function AdminDashboard() {
 
         {/* Backup Tab */}
         {tab === "backup" && (
-          <BackupTab />
+          <BackupTab demoMode={demoMode} />
         )}
 
         {/* Services Tab */}
@@ -489,7 +501,9 @@ export default function AdminDashboard() {
                 onKeyDown={(e) => e.key === "Enter" && addGroup()}
                 className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
               />
-              <button onClick={addGroup} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+              <button onClick={addGroup} disabled={demoMode}
+                title={demoMode ? "Disabled in demo mode" : ""}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded text-sm">
                 {t("panelio.admin.dashboard.addGroup")}
               </button>
             </div>
@@ -595,6 +609,7 @@ export default function AdminDashboard() {
                       <ServiceForm
                         onSave={(data) => saveNewService(groupName, data)}
                         onCancel={() => setAddingService(null)}
+                        demoMode={demoMode}
                       />
                     )}
                     {items.map((svc, idx) => {
@@ -632,6 +647,7 @@ export default function AdminDashboard() {
                               service={svc}
                               onSave={(data) => updateService(groupName, svcName, data)}
                               onCancel={() => setEditingService(null)}
+                              demoMode={demoMode}
                             />
                           ) : (
                             <div className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
@@ -678,7 +694,9 @@ export default function AdminDashboard() {
                 onKeyDown={(e) => e.key === "Enter" && addBookmarkGroup()}
                 className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm flex-1"
               />
-              <button onClick={addBookmarkGroup} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+              <button onClick={addBookmarkGroup} disabled={demoMode}
+                title={demoMode ? "Disabled in demo mode" : ""}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded text-sm">
                 {t("panelio.admin.dashboard.addGroup")}
               </button>
             </div>
@@ -740,6 +758,7 @@ export default function AdminDashboard() {
                       <BookmarkForm
                         onSave={(data) => saveNewBookmark(groupName, data)}
                         onCancel={() => setAddingBookmark(null)}
+                        demoMode={demoMode}
                       />
                     )}
                     {items.map((bm, idx) => {
@@ -752,6 +771,7 @@ export default function AdminDashboard() {
                               bookmark={bm}
                               onSave={(data) => updateBookmark(groupName, bmName, data)}
                               onCancel={() => setEditingBookmark(null)}
+                              demoMode={demoMode}
                             />
                           ) : (
                             <div className="flex items-center justify-between py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
@@ -795,7 +815,7 @@ const WIDGET_TYPES = [
   "datetime", "glances", "docker", "kubernetes", "clock", "logo",
 ];
 
-function WidgetForm({ widget, index, onSave, onCancel }) {
+function WidgetForm({ widget, index, onSave, onCancel, demoMode }) {
   const isEdit = widget != null;
   const existingType = isEdit ? Object.keys(widget)[0] : "";
   const existingOpts = isEdit ? widget[existingType] : {};
@@ -845,7 +865,8 @@ function WidgetForm({ widget, index, onSave, onCancel }) {
         </div>
       </div>
       <div className="flex gap-2 mt-3">
-        <button onClick={handleSave} disabled={!type}
+        <button onClick={handleSave} disabled={!type || demoMode}
+          title={demoMode ? "Disabled in demo mode" : ""}
           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
           Save
         </button>
@@ -858,7 +879,7 @@ function WidgetForm({ widget, index, onSave, onCancel }) {
   );
 }
 
-function WidgetsTab() {
+function WidgetsTab({ demoMode }) {
   const { t } = useTranslation("common");
   const [widgets, setWidgets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -910,13 +931,15 @@ function WidgetsTab() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t("panelio.admin.dashboard.widgets")}</h2>
-        <button onClick={() => setAdding(true)} className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+        <button onClick={() => setAdding(true)} disabled={demoMode}
+          title={demoMode ? "Disabled in demo mode" : ""}
+          className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded text-sm">
           {t("panelio.admin.dashboard.addWidget")}
         </button>
       </div>
 
       {adding && (
-        <WidgetForm onSave={addWidget} onCancel={() => setAdding(false)} />
+        <WidgetForm onSave={addWidget} onCancel={() => setAdding(false)} demoMode={demoMode} />
       )}
 
       {widgets.length === 0 && !adding && (
@@ -929,7 +952,7 @@ function WidgetsTab() {
         return (
           <div key={idx}>
             {editingIdx === idx ? (
-              <WidgetForm widget={w} index={idx} onSave={updateWidget} onCancel={() => setEditingIdx(null)} />
+              <WidgetForm widget={w} index={idx} onSave={updateWidget} onCancel={() => setEditingIdx(null)} demoMode={demoMode} />
             ) : (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-3">
                 <div className="flex items-center justify-between px-4 py-3">
@@ -953,7 +976,7 @@ function WidgetsTab() {
 }
 
 // --- Settings Tab Component ---
-function SettingsTab() {
+function SettingsTab({ demoMode }) {
   const { t } = useTranslation("common");
   const [settings, setSettings] = useState({});
   const [json, setJson] = useState("");
@@ -1037,7 +1060,8 @@ function SettingsTab() {
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{t("panelio.admin.dashboard.settings")}</h2>
         <div className="flex gap-2 items-center">
           {success && <span className="text-green-500 text-sm">{t("panelio.admin.dashboard.saved")}</span>}
-          <button onClick={saveSettings} disabled={saving}
+          <button onClick={saveSettings} disabled={saving || demoMode}
+            title={demoMode ? "Disabled in demo mode" : ""}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded text-sm">
             {saving ? t("panelio.admin.dashboard.saving") : t("panelio.admin.dashboard.saveSettings")}
           </button>

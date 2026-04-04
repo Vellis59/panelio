@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "next-i18next";
 
 // --- Backup Tab Component ---
-export default function BackupTab() {
+export default function BackupTab({ demoMode }) {
   const { t } = useTranslation("common");
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState(null);
@@ -78,9 +78,9 @@ export default function BackupTab() {
           <p className="text-sm text-gray-500 mb-4">
             {t("panelio.admin.backup.importDescription")}
           </p>
-          <label className={`inline-block px-4 py-2 rounded text-sm text-white cursor-pointer ${importing ? "bg-gray-400" : "bg-orange-600 hover:bg-orange-700"}`}>
+          <label className={`inline-block px-4 py-2 rounded text-sm text-white cursor-pointer ${importing || demoMode ? "bg-gray-400" : "bg-orange-600 hover:bg-orange-700"}`}>
             {importing ? t("panelio.admin.backup.importing") : t("panelio.admin.backup.chooseFile")}
-            <input type="file" accept=".json" onChange={handleImport} className="hidden" disabled={importing} />
+            <input type="file" accept=".json" onChange={handleImport} className="hidden" disabled={importing || demoMode} />
           </label>
           {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
           {result && (

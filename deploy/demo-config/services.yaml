@@ -1,0 +1,147 @@
+---
+# Demo Services Configuration
+# Popular self-hosted applications for showcase
+
+- Media & Streaming:
+    - title: Plex
+      description: Media streaming server
+      href: https://plex.example.com
+      icon: plex.png
+
+    - title: Jellyfin
+      description: Media system
+      href: https://jellyfin.example.com
+      icon: jellyfin.png
+
+    - title: Tautulli
+      description: Music streaming
+      href: https://tautulli.example.com
+      icon: tautulli.png
+
+- title: Audiobookshelf
+      description: Audiobooks
+      href: https://audiobookshelf.example.com
+      icon: audiobookshelf.png
+
+  - title: Nextcloud
+      description: Cloud storage and collaboration
+      href: https://nextcloud.example.com
+      icon: nextcloud.png
+
+    - title: Pi-hole
+      description: Network-wide ad blocker
+      href: https://pi-hole.example.com
+      icon: pi-hole.png
+
+    - title: Portainer
+      description: Container management
+      href: https://portainer.example.com
+      icon: portainer.png
+
+    - title: Grafana
+      description: Analytics and monitoring
+      href: https://grafana.example.com
+      icon: grafana.png
+
+    - title: Home Assistant
+      description: Smart home automation
+      href: https://home-assistant.example.com
+      icon: home-assistant.png
+
+    - title: Vaultwarden
+      description: Secrets management
+      href: https://vaultwarden.example.com
+      icon: vaultwarden.png
+
+    - title: Proxmox
+      description: Virtual environment manager
+      href: https://proxmox.example.com
+      icon: proxmox.png
+
+    - title: Uptime Kuma
+      description: Uptime monitoring
+      href: https://uptime-kuma.example.com
+      icon: uptime-kuma.png
+
+    - title: Paperless-ngx
+      description: Authentication proxy
+      href: https://paperless-ngx.example.com
+      icon: paperless-ngx.png
+
+    - title: Immich
+      description: Media server
+      href: https://immich.example.com
+      icon: immich.png
+
+    - title: Syncthing
+      description: Music server
+      href: https://syncthing.example.com
+      icon: syncthing.png
+
+    - title: Navidrome
+      description: Home automation
+      href: https://navidrome.example.com
+      icon: navidrome.png
+
+    - title: Docker
+      description: Container management
+      href: https://docker.example.com
+      icon: docker.png
+    - title: VS Code Server
+      description: Code editor
+      href: https://vscode.example.com
+      icon: vscode.png
+    - title: Gitea
+      description: Self-hosted Git
+      href: https://gitea.example.com
+      icon: gitea.png
+
+  - Infrastructure:
+    - title: TrueNAS
+      description: NAS operating System
+      href: https://truenas.example.com
+      icon: truenas.png
+    - title: Pi-hole
+      description: DNS Server
+      href: https://pi-hole-dns.example.com
+      icon: pi-hole-dns.png
+    - title: Nginx Proxy Manager
+      description: Reverse Proxy
+      href: https://nginx-proxy.example.com
+      icon: nginx-proxy-manager.png
+    - title: MariaDB
+      description: Database
+      href: https://mariadb.example.com
+      icon: mariadb.png
+
+  - Developer Tools:
+    - title: GitHub
+      description: Code hosting
+      href: https://github.com
+      icon: github.png
+    - title: GitLab
+      description: DevOps platform
+      href: https://gitlab.example.com
+      icon: gitlab.png
+    - title: Docker Hub
+      description: Container registry
+      href: https://hub.docker.com
+      icon: docker-hub.png
+    - title: NPM Registry
+      description: Package registry
+      href: https://npm.example.com
+      icon: npm.png
+
+  - Monitoring:
+    - title: Prometheus
+      description: Monitoring and alerting
+      href: https://prometheus.example.com
+      icon: prometheus.png
+    - title: Alertmanager
+      description: Alert management
+      href: https://alertmanager.example.com
+      icon: alertmanager.png
+    - title: Zabbix
+      description: Infrastructure monitoring
+      href: https://zabbix.example.com
+      icon: zabbix.png

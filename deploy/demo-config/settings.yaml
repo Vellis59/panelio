@@ -1,0 +1,15 @@
+---
+# Demo Settings Configuration
+title: Panelio Demo
+description: Self-hosted dashboard demo
+logo: https://cdn.jsdelivr.net/gh/walkxcodegroup/walkxcode@master/assets/logo.png
+theme: dark
+headerStyle: boxed
+cardStyle: panelio
+showGreeting: true
+showClock: true
+showStatusDot: true
+themePreset: dark-mirror
+
+providers:
+  openweathermap: openweathermap

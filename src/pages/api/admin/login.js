@@ -1,4 +1,5 @@
 import { isAdminEnabled, validatePassword, generateToken } from "utils/admin/auth";
+import { isDemo } from "utils/admin/demo";
 
 /**
  * POST /api/admin/login
@@ -16,6 +17,16 @@ export default async function handler(req, res) {
   }
 
   const { password } = req.body;
+
+  // In demo mode, accept any non-empty password
+  if (isDemo()) {
+    if (!password) {
+      return res.status(401).json({ error: "Password required" });
+    }
+    const token = generateToken({ demo: true });
+    res.setHeader("Set-Cookie", `panelio_admin_token=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=86400`);
+    return res.status(200).json({ success: true, token, demo: true });
+  }
 
   if (!password || !validatePassword(password)) {
     return res.status(401).json({ error: "Invalid password" });

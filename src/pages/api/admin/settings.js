@@ -1,4 +1,5 @@
 import { requireAdmin } from "utils/admin/auth";
+import { demoBlock } from "utils/admin/demo";
 import { settingsOps } from "utils/admin/yaml-crud";
 
 /**
@@ -6,7 +7,7 @@ import { settingsOps } from "utils/admin/yaml-crud";
  * GET - get settings
  * PUT - update settings
  */
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -30,3 +31,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+
+export default demoBlock(handler);

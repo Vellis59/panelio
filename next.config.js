@@ -4,6 +4,9 @@ const { i18n } = require("./next-i18next.config");
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  env: {
+    DEMO_MODE: process.env.DEMO_MODE || "false",
+  },
   images: {
     remotePatterns: [
       {

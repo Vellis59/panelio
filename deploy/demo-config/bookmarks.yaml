@@ -1,0 +1,29 @@
+---
+# Demo Bookmarks Configuration
+- Developer:
+    - GitHub:
+        - abbr: GH
+          href: https://github.com
+        description: Code hosting
+    - GitLab:
+        - abbr: GL
+          href: https://gitlab.example.com
+        description: DevOps platform
+    - Docker Hub:
+        - abbr: DH
+          href: https://hub.docker.com
+        description: Container registry
+    - NPM:
+        - abbr: NPM
+          href: https://www.npmjs.com
+        description: Package registry
+
+  - Documentation:
+    - docs:
+        - abbr: Docs
+          href: https://docs.example.com
+        description: Documentation site
+    - Wikipedia:
+        - abbr: WK
+          href: https://en.wikipedia.org
+        description: Online encyclopedia

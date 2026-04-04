@@ -1,13 +1,13 @@
 import { requireAdmin } from "utils/admin/auth";
+import { demoBlock } from "utils/admin/demo";
 import { settingsOps } from "utils/admin/yaml-crud";
 
 /**
  * /api/admin/pin
  * POST - toggle pin status for a service
- * Body: { group, service } — adds to pinned
- removes if already pinned
+ * Body: { group, service } — adds to pinned, removes if already pinned
  */
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   if (req.method !== "POST") {
@@ -36,3 +36,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+
+export default demoBlock(handler);

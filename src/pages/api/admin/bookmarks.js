@@ -1,4 +1,5 @@
 import { requireAdmin } from "utils/admin/auth";
+import { demoBlock } from "utils/admin/demo";
 import { bookmarksOps } from "utils/admin/yaml-crud";
 
 /**
@@ -8,7 +9,7 @@ import { bookmarksOps } from "utils/admin/yaml-crud";
  * PUT    - update a bookmark
  * DELETE - remove a bookmark
  */
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -73,3 +74,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+
+export default demoBlock(handler);

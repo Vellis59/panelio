@@ -1,0 +1,23 @@
+---
+# Demo Widgets Configuration
+- resources:
+    - cpu: true
+    - memory: true
+    - disk: true
+
+- search:
+    - provider: custom
+      url: https://www.google.com
+    - target: _blank
+
+- datetime:
+    - format: date with time
+    - https://example.com
+
+- weather:
+    - provider: openweathermap
+      url: https://api.openweathermap.org/data/2.5/weather?q=Paris
+    - cache: 5
+
+- logo:
+    - icon: https://cdn.jsdelivr.net/gh/walkxcodegroup/walkxcode@master/assets/logo.png

@@ -1,4 +1,5 @@
 import { requireAdmin } from "utils/admin/auth";
+import { demoBlock } from "utils/admin/demo";
 import { servicesOps } from "utils/admin/yaml-crud";
 
 /**
@@ -8,7 +9,7 @@ import { servicesOps } from "utils/admin/yaml-crud";
  * PUT  - update a service
  * DELETE - remove a service
  */
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -102,3 +103,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+
+export default demoBlock(handler);

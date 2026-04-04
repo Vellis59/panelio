@@ -1,34 +1,44 @@
+import { isDemo } from "utils/admin/demo";
+
 const ADMIN_PASSWORD = process.env.PANELIO_ADMIN_PASSWORD || process.env.HOMEPAGE_ADMIN_PASSWORD;
 const TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 const ADMIN_COOKIE_NAME = "panelio_admin_token";
+const DEMO_TOKEN_SECRET = process.env.PANELIO_DEMO_TOKEN_SECRET || "panelio-demo-mode";
 
-/**
- * Check if admin is enabled (password is configured)
- */
-export function isAdminEnabled() {
-  return !!ADMIN_PASSWORD;
+function getTokenSecret(demo = false) {
+  if (demo) return DEMO_TOKEN_SECRET;
+  return ADMIN_PASSWORD;
 }
 
 /**
- * Validate admin password and return a simple token
+ * Check if admin is enabled (password is configured or demo mode is active)
+ */
+export function isAdminEnabled() {
+  return !!ADMIN_PASSWORD || isDemo();
+}
+
+/**
+ * Validate admin password
  */
 export function validatePassword(password) {
-  if (!isAdminEnabled()) return false;
+  if (isDemo()) return !!password;
+  if (!ADMIN_PASSWORD) return false;
   return password === ADMIN_PASSWORD;
 }
 
 /**
  * Generate a simple session token
  */
-export function generateToken() {
+export function generateToken(options = {}) {
   const crypto = require("crypto");
+  const demo = options.demo === true;
   const payload = {
     ts: Date.now(),
     rand: crypto.randomBytes(16).toString("hex"),
+    demo,
   };
   const token = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  // Sign with HMAC
-  const secret = ADMIN_PASSWORD;
+  const secret = getTokenSecret(demo);
   const sig = crypto
     .createHmac("sha256", secret)
     .update(token)
@@ -45,15 +55,20 @@ export function verifyToken(token) {
     const crypto = require("crypto");
     const [payload, sig] = token.split(".");
     if (!payload || !sig) return false;
+
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString());
+    const secret = getTokenSecret(data.demo === true);
+    if (!secret) return false;
+
     const expectedSig = crypto
-      .createHmac("sha256", ADMIN_PASSWORD)
+      .createHmac("sha256", secret)
       .update(payload)
       .digest("base64url");
+
     if (sig !== expectedSig) return false;
-    const data = JSON.parse(Buffer.from(payload, "base64url").toString());
-    // Check expiry
     if (Date.now() - data.ts > TOKEN_EXPIRY) return false;
-    return true;
+
+    return data;
   } catch {
     return false;
   }
@@ -63,7 +78,6 @@ export function verifyToken(token) {
  * Extract token from request (cookie or Authorization header)
  */
 export function getTokenFromRequest(req) {
-  // Check cookie first
   const cookie = req.headers.cookie || "";
   const panelioMatch = cookie.match(new RegExp(`(?:^|;\\s*)${ADMIN_COOKIE_NAME}=([^;]*)`));
   if (panelioMatch) return panelioMatch[1];
@@ -71,7 +85,6 @@ export function getTokenFromRequest(req) {
   const legacyMatch = cookie.match(/(?:^|;\s*)homepage_admin_token=([^;]*)/);
   if (legacyMatch) return legacyMatch[1];
 
-  // Check Authorization header
   const auth = req.headers.authorization;
   if (auth && auth.startsWith("Bearer ")) return auth.slice(7);
 
@@ -87,10 +100,14 @@ export function requireAdmin(req, res) {
     res.status(403).json({ error: "Admin not configured. Set PANELIO_ADMIN_PASSWORD env var. HOMEPAGE_ADMIN_PASSWORD is still supported as a legacy fallback." });
     return false;
   }
+
   const token = getTokenFromRequest(req);
-  if (!verifyToken(token)) {
+  const session = verifyToken(token);
+  if (!session) {
     res.status(401).json({ error: "Unauthorized" });
     return false;
   }
+
+  req.adminSession = session;
   return true;
 }

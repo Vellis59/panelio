@@ -1,4 +1,5 @@
 import { requireAdmin } from "utils/admin/auth";
+import { demoBlock } from "utils/admin/demo";
 import { readConfig, writeConfig } from "utils/admin/yaml-crud";
 
 /**
@@ -8,7 +9,7 @@ import { readConfig, writeConfig } from "utils/admin/yaml-crud";
  * PUT    - update a widget by index
  * DELETE - remove a widget by index
  */
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
 
   try {
@@ -64,3 +65,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: e.message });
   }
 }
+
+export default demoBlock(handler);
