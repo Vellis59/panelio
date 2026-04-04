@@ -285,7 +285,7 @@ function Home({ initialSettings }) {
   const { color, setColor } = useContext(ColorContext);
   const { settings, setSettings } = useContext(SettingsContext);
   const { activeTab, setActiveTab } = useContext(TabContext);
-  const { asPath } = useRouter();
+  const { asPath, locale } = useRouter();
 
   useEffect(() => {
     setSettings(initialSettings);
@@ -307,8 +307,8 @@ function Home({ initialSettings }) {
   }, [liveThemeSettings, setSettings]);
 
   useEffect(() => {
-    const language = normalizeLanguage(settings.language);
-    if (language) {
+    const language = normalizeLanguage(locale || settings.language);
+    if (language && i18n.language !== language) {
       i18n.changeLanguage(language);
     }
 
@@ -319,7 +319,7 @@ function Home({ initialSettings }) {
     if (settings.color && color !== settings.color) {
       setColor(settings.color);
     }
-  }, [i18n, settings, color, setColor, theme, setTheme]);
+  }, [i18n, locale, settings, color, setColor, theme, setTheme]);
 
   const [searching, setSearching] = useState(false);
   const [searchString, setSearchString] = useState("");
