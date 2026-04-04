@@ -22,7 +22,7 @@ jobs:
 
   build:
     name: Docker Build & Push
-    if: github.repository == 'Vellis59/homepage-admin'
+    if: github.repository == 'Vellis59/panelio'
     runs-on: ubuntu-22.04
     permissions:
       contents: read
