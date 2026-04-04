@@ -25,15 +25,12 @@ Panelio is a fork of [Homepage](https://github.com/gethomepage/homepage) that ad
 ### Docker (recommended)
 
 ```bash
-git clone https://github.com/Vellis59/panelio.git
-cd panelio
+# Pull the image from GitHub Container Registry
+docker pull ghcr.io/vellis59/panelio:latest
 
-# Copy the example config
-cp -r deploy/config ./config
-
-# Edit config/settings.yaml with your services
-# Set HOMEPAGE_ALLOWED_HOSTS to your domain or localhost
-docker compose -f deploy/docker-compose.yml up -d --build
+# Or use docker compose
+curl -O https://raw.githubusercontent.com/Vellis59/panelio/main/deploy/docker-compose.yml
+docker compose up -d
 ```
 
 Open **http://localhost:3011** for the dashboard, **http://localhost:3011/admin** for the admin panel.
