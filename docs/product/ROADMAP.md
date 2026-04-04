@@ -79,8 +79,6 @@ Under the hood — maintainability, deployment, and upstream management.
 | 🔲 Todo | CI/CD pipeline | Automated build, test, and release |
 | 🔲 Todo | Config migration system | Handle breaking changes gracefully |
 | 🔲 Todo | Multi-user auth | Deferred — single-user for v1 |
-| 🔲 Todo | Submit to Coolify app store | One-click install for Coolify users |
-| 🔲 Todo | Submit to EasyPanel templates | One-click install for EasyPanel users |
 
 ### Track 4: Identity & Community
 Positioning, docs, and community presence.
