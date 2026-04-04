@@ -1199,6 +1199,60 @@
                 "bookmarks": "Favoris",
                 "widgets": "Widgets"
             }
+        },
+        "admin": {
+            "title": "Admin Panelio",
+            "login": {
+                "passwordPlaceholder": "Mot de passe admin",
+                "loginButton": "Connexion",
+                "loginFailed": "Échec de connexion",
+                "networkError": "Erreur réseau",
+                "hint": "Définissez PANELIO_ADMIN_PASSWORD pour activer l’admin"
+            },
+            "nav": {
+                "services": "Services",
+                "bookmarks": "Favoris",
+                "widgets": "Widgets",
+                "settings": "Paramètres",
+                "preview": "Aperçu",
+                "backup": "Sauvegarde",
+                "viewHomepage": "← Voir la homepage",
+                "logout": "Déconnexion"
+            },
+            "common": {
+                "loading": "Chargement...",
+                "save": "Enregistrer",
+                "cancel": "Annuler",
+                "rename": "Renommer",
+                "delete": "Supprimer",
+                "edit": "Modifier",
+                "create": "Créer"
+            },
+            "backup": {
+                "title": "Import / Export",
+                "exportTitle": "📥 Exporter la configuration",
+                "exportDescription": "Télécharge tous les fichiers de config (services, favoris, widgets, settings, CSS/JS custom) dans un seul bundle JSON.",
+                "downloadBackup": "Télécharger la sauvegarde",
+                "importTitle": "📤 Importer une configuration",
+                "importDescription": "Restaure depuis une sauvegarde JSON exportée précédemment. Cela écrasera les fichiers de configuration existants !",
+                "importing": "Import en cours...",
+                "chooseFile": "Choisir un fichier",
+                "importFailed": "Échec de l’import",
+                "importSuccess": "✅ Import réussi !",
+                "imported": "Importé",
+                "warning": "⚠️ Attention :",
+                "warningText": "L’import écrasera votre configuration actuelle. Des sauvegardes auto sont enregistrées en .bak, mais exportez d’abord par sécurité."
+            },
+            "dashboard": {
+                "livePreview": "Aperçu en direct",
+                "widgets": "Widgets",
+                "settings": "Paramètres",
+                "addGroup": "+ Ajouter un groupe",
+                "addWidget": "+ Ajouter un widget",
+                "saveSettings": "Enregistrer les paramètres",
+                "saving": "Enregistrement...",
+                "saved": "✅ Enregistré !"
+            }
         }
     }
 }

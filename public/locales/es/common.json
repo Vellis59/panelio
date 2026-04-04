@@ -1199,6 +1199,60 @@
                 "bookmarks": "Marcadores",
                 "widgets": "Widgets"
             }
+        },
+        "admin": {
+            "title": "Admin de Panelio",
+            "login": {
+                "passwordPlaceholder": "Contraseña de admin",
+                "loginButton": "Iniciar sesión",
+                "loginFailed": "Error de inicio de sesión",
+                "networkError": "Error de red",
+                "hint": "Define PANELIO_ADMIN_PASSWORD para activar el admin"
+            },
+            "nav": {
+                "services": "Servicios",
+                "bookmarks": "Marcadores",
+                "widgets": "Widgets",
+                "settings": "Configuración",
+                "preview": "Vista previa",
+                "backup": "Copia de seguridad",
+                "viewHomepage": "← Ver homepage",
+                "logout": "Cerrar sesión"
+            },
+            "common": {
+                "loading": "Cargando...",
+                "save": "Guardar",
+                "cancel": "Cancelar",
+                "rename": "Renombrar",
+                "delete": "Eliminar",
+                "edit": "Editar",
+                "create": "Crear"
+            },
+            "backup": {
+                "title": "Importar / Exportar",
+                "exportTitle": "📥 Exportar configuración",
+                "exportDescription": "Descarga todos los archivos de configuración (servicios, marcadores, widgets, ajustes, CSS/JS personalizado) como un único paquete JSON.",
+                "downloadBackup": "Descargar copia",
+                "importTitle": "📤 Importar configuración",
+                "importDescription": "Restaura desde una copia JSON exportada previamente. ¡Esto sobrescribirá los archivos de configuración existentes!",
+                "importing": "Importando...",
+                "chooseFile": "Elegir archivo",
+                "importFailed": "Importación fallida",
+                "importSuccess": "✅ ¡Importación correcta!",
+                "imported": "Importado",
+                "warning": "⚠️ Advertencia:",
+                "warningText": "La importación sobrescribirá tu configuración actual. Se guardan copias automáticas como archivos .bak, pero exporta antes por seguridad."
+            },
+            "dashboard": {
+                "livePreview": "Vista previa en vivo",
+                "widgets": "Widgets",
+                "settings": "Configuración",
+                "addGroup": "+ Añadir grupo",
+                "addWidget": "+ Añadir widget",
+                "saveSettings": "Guardar configuración",
+                "saving": "Guardando...",
+                "saved": "✅ ¡Guardado!"
+            }
         }
     }
 }

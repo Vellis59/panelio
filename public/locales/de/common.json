@@ -1199,6 +1199,60 @@
                 "bookmarks": "Lesezeichen",
                 "widgets": "Widgets"
             }
+        },
+        "admin": {
+            "title": "Panelio-Admin",
+            "login": {
+                "passwordPlaceholder": "Admin-Passwort",
+                "loginButton": "Anmelden",
+                "loginFailed": "Anmeldung fehlgeschlagen",
+                "networkError": "Netzwerkfehler",
+                "hint": "Setze PANELIO_ADMIN_PASSWORD, um den Admin zu aktivieren"
+            },
+            "nav": {
+                "services": "Dienste",
+                "bookmarks": "Lesezeichen",
+                "widgets": "Widgets",
+                "settings": "Einstellungen",
+                "preview": "Vorschau",
+                "backup": "Backup",
+                "viewHomepage": "← Homepage ansehen",
+                "logout": "Abmelden"
+            },
+            "common": {
+                "loading": "Lädt...",
+                "save": "Speichern",
+                "cancel": "Abbrechen",
+                "rename": "Umbenennen",
+                "delete": "Löschen",
+                "edit": "Bearbeiten",
+                "create": "Erstellen"
+            },
+            "backup": {
+                "title": "Import / Export",
+                "exportTitle": "📥 Konfiguration exportieren",
+                "exportDescription": "Lade alle Konfigurationsdateien (Dienste, Lesezeichen, Widgets, Einstellungen, benutzerdefiniertes CSS/JS) als einzelnes JSON-Bundle herunter.",
+                "downloadBackup": "Backup herunterladen",
+                "importTitle": "📤 Konfiguration importieren",
+                "importDescription": "Stelle eine zuvor exportierte JSON-Sicherung wieder her. Dadurch werden vorhandene Konfigurationsdateien überschrieben!",
+                "importing": "Import läuft...",
+                "chooseFile": "Backup-Datei wählen",
+                "importFailed": "Import fehlgeschlagen",
+                "importSuccess": "✅ Import erfolgreich!",
+                "imported": "Importiert",
+                "warning": "⚠️ Warnung:",
+                "warningText": "Der Import überschreibt deine aktuelle Konfiguration. Automatische Backups werden als .bak-Dateien gespeichert, aber exportiere vorsichtshalber zuerst."
+            },
+            "dashboard": {
+                "livePreview": "Live-Vorschau",
+                "widgets": "Widgets",
+                "settings": "Einstellungen",
+                "addGroup": "+ Gruppe hinzufügen",
+                "addWidget": "+ Widget hinzufügen",
+                "saveSettings": "Einstellungen speichern",
+                "saving": "Speichert...",
+                "saved": "✅ Gespeichert!"
+            }
         }
     }
 }

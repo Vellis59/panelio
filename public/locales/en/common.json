@@ -1199,6 +1199,60 @@
                 "bookmarks": "Bookmarks",
                 "widgets": "Widgets"
             }
+        },
+        "admin": {
+            "title": "Panelio Admin",
+            "login": {
+                "passwordPlaceholder": "Admin password",
+                "loginButton": "Login",
+                "loginFailed": "Login failed",
+                "networkError": "Network error",
+                "hint": "Set PANELIO_ADMIN_PASSWORD to enable admin"
+            },
+            "nav": {
+                "services": "Services",
+                "bookmarks": "Bookmarks",
+                "widgets": "Widgets",
+                "settings": "Settings",
+                "preview": "Preview",
+                "backup": "Backup",
+                "viewHomepage": "← View Homepage",
+                "logout": "Logout"
+            },
+            "common": {
+                "loading": "Loading...",
+                "save": "Save",
+                "cancel": "Cancel",
+                "rename": "Rename",
+                "delete": "Delete",
+                "edit": "Edit",
+                "create": "Create"
+            },
+            "backup": {
+                "title": "Import / Export",
+                "exportTitle": "📥 Export Configuration",
+                "exportDescription": "Download all config files (services, bookmarks, widgets, settings, custom CSS/JS) as a single JSON bundle.",
+                "downloadBackup": "Download Backup",
+                "importTitle": "📤 Import Configuration",
+                "importDescription": "Restore from a previously exported JSON backup. This will overwrite existing config files!",
+                "importing": "Importing...",
+                "chooseFile": "Choose Backup File",
+                "importFailed": "Import failed",
+                "importSuccess": "✅ Import successful!",
+                "imported": "Imported",
+                "warning": "⚠️ Warning:",
+                "warningText": "Importing will overwrite your current configuration. Auto-backups are saved as .bak files, but export first to be safe."
+            },
+            "dashboard": {
+                "livePreview": "Live Preview",
+                "widgets": "Widgets",
+                "settings": "Settings",
+                "addGroup": "+ Add Group",
+                "addWidget": "+ Add Widget",
+                "saveSettings": "Save Settings",
+                "saving": "Saving...",
+                "saved": "✅ Saved!"
+            }
         }
     }
 }
