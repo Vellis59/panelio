@@ -1,71 +1,125 @@
-# Contributing to Homepage
+# Contributing to Panelio
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+Thanks for your interest in improving Panelio.
 
-- Reporting a bug
-- Discussing the current state of the project
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+Panelio is a fork of [Homepage](https://github.com/gethomepage/homepage) with a stronger focus on a built-in admin experience. Contributions are welcome, especially when they keep the project simpler, clearer, and easier to maintain.
 
-## We Develop with Github
+## Before You Start
 
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
+A few principles help keep contributions useful:
 
-## Any contributions you make will be under the GNU General Public License v3.0
+- prefer small, focused pull requests
+- keep the user experience simple
+- avoid unnecessary complexity
+- preserve compatibility with the existing file-based configuration model when possible
+- explain the real-world benefit of the change
 
-In short, when you submit code changes, your submissions are understood to be under the same [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/) that covers the project. Feel free to contact the maintainers if that's a concern.
+If you are planning a larger feature, open an issue or start a discussion first so the direction can be confirmed before a lot of work is done.
 
-## Report bugs using Github [discussions](https://github.com/gethomepage/homepage/discussions)
+## Good First Contributions
 
-We use GitHub discussions to triage bugs. Report a bug by [opening a new discussion](https://github.com/gethomepage/homepage/discussions/new?category=support); it's that easy! Please do not open an issue unless instructed to do so by a project maintainer.
+Helpful contributions include:
 
-## Write bug reports with detail, background, and sample configurations
+- bug fixes
+- README and documentation improvements
+- tests for admin panel behavior
+- tests for config file CRUD logic
+- UI polish that improves clarity without adding product complexity
+- small performance or maintainability improvements
 
-Homepage includes a lot of configuration options and is often deploying in larger systems. Please include as much information (configurations, deployment method, Docker & API versions, etc) as you can when reporting an issue.
+## Development Setup
 
-**Great Bug Reports** tend to have:
+```bash
+git clone https://github.com/Vellis59/panelio.git
+cd panelio
+pnpm install
+cp -r deploy/config ./config
+HOMEPAGE_ALLOWED_HOSTS=localhost PANELIO_ADMIN_PASSWORD=changeme pnpm dev
+```
 
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give example configurations if you can.
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
+Useful commands:
 
-People _love_ thorough bug reports. I'm not even kidding.
+```bash
+pnpm dev
+pnpm build
+pnpm test
+pnpm test:coverage
+pnpm lint
+```
 
-## Development Guidelines
+## Pull Request Guidelines
 
-Please see the [documentation regarding development](https://gethomepage.dev/widgets/authoring/getting-started/#development) and specifically the [guidelines for new service widgets](https://gethomepage.dev/widgets/authoring/getting-started/#service-widget-guidelines) if you are considering making one.
+Please try to keep pull requests easy to review.
 
-## Use a Consistent Coding Style
+### Before opening a PR
 
-Please see information in the docs regarding [code formatting with pre-commit hooks](https://gethomepage.dev/widgets/authoring/getting-started/#code-formatting-with-pre-commit-hooks).
+- make sure the change solves one clear problem
+- run the relevant checks locally
+- update docs if behavior changed
+- add or update tests when practical
+- keep unrelated changes out of the same PR
+
+### In the PR description
+
+Please include:
+
+- **what changed**
+- **why it matters**
+- **how to test it**
+- screenshots for UI changes, if relevant
+
+A short PR with a clear explanation is better than a large PR with mixed goals.
+
+## Reporting Bugs
+
+When reporting a bug, please include:
+
+- what you were trying to do
+- what happened instead
+- how to reproduce the issue
+- your deployment method (local, Docker, EasyPanel, Coolify, etc.)
+- relevant logs or screenshots if available
+
+## Tests
+
+Tests do not need to be perfect to be useful.
+
+For now, the most valuable tests are:
+
+- admin panel behavior
+- config read/write logic
+- basic regression coverage for core CRUD flows
+
+Simple, focused tests are preferred over large or brittle suites.
+
+## Upstream Relationship
+
+Panelio builds on top of Homepage, and upstream improvements still matter.
+
+- If a change clearly belongs in Homepage itself, consider contributing upstream too.
+- If a change is specific to Panelio's admin-focused direction, it likely belongs here.
+
+Homepage upstream repository:
+- https://github.com/gethomepage/homepage
+
+## Code Style
+
+Please follow the existing project style and avoid introducing new patterns unless there is a clear reason.
+
+When in doubt:
+
+- choose readability over cleverness
+- choose maintainability over abstraction
+- choose smaller changes over sweeping rewrites
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its GNU General Public License.
+By contributing, you agree that your contributions will be distributed under the same license used by this repository.
 
-## Use of AI for pull requests
+See [LICENSE](./LICENSE) for the current license text.
 
-In general, homepage does not accept "AI-generated" PRs. If you choose to use something like that to aid the development process to generate a significant proportion of the pull request, please make sure this is explicitly stated in the PR itself.
+## Questions
 
-## References
+If you are unsure whether something is a good fit, open a discussion first. That is often the fastest way to avoid wasted effort.
 
-This document was adapted from the open-source contribution guidelines for [Facebook's Draft](https://github.com/facebook/draft-js/blob/main/CONTRIBUTING.md)
-
-## Automatic Respository Maintenance
-
-The homepage team appreciates all effort and interest from the community in filing bug reports, creating feature requests, sharing ideas and helping other community members. That said, in an effort to keep the repository organized and managebale the project uses automatic handling of certain areas:
-
-- Issues, pull requests and discussions that are closed will be locked after 30 days of inactivity.
-- Discussions with a marked answer will be automatically closed.
-- Discussions in the 'General' or 'Support' categories will be closed after 180 days of inactivity.
-- Feature requests that do not meet the following thresholds will be closed: 20 "up-votes" after 180 days of inactivity or 40 "up-votes" after 365 days.
-
-In all cases, threads can be re-opened by project maintainers and, of course, users can always create a new discussion for related concerns.
-Finally, remember that all information remains searchable and 'closed' feature requests can still serve as inspiration for new features.
-
-Thank you all for your contributions.
+Thanks again for helping make Panelio better.
