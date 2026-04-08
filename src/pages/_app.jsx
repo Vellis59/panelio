@@ -10,6 +10,7 @@ import { ColorProvider } from "utils/contexts/color";
 import { SettingsProvider } from "utils/contexts/settings";
 import { TabProvider } from "utils/contexts/tab";
 import { ThemeProvider } from "utils/contexts/theme";
+import { Analytics } from "@vercel/analytics/next";
 
 import nextI18nextConfig from "../../next-i18next.config";
 
@@ -87,6 +88,7 @@ function MyApp({ Component, pageProps }) {
           <SettingsProvider>
             <TabProvider>
               <Component {...pageProps} />
+              <Analytics />
             </TabProvider>
           </SettingsProvider>
         </ThemeProvider>
