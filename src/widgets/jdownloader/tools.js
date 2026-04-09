@@ -1,7 +1,22 @@
 import crypto from "crypto";
 
+// Use PBKDF2 for key derivation from passwords to prevent brute-force attacks
+// Using 100,000 iterations with SHA-256 HMAC for sufficient computational cost
+const PBKDF2_ITERATIONS = 100000;
+const FIXED_SALT = Buffer.from("panelio-jdownloader-fixed-salt", "utf8");
+
 export function sha256(data) {
   return crypto.createHash("sha256").update(data).digest();
+}
+
+export function deriveKey(password) {
+  return crypto.pbkdf2Sync(
+    password,
+    FIXED_SALT,
+    PBKDF2_ITERATIONS,
+    32, // 32 bytes = 256 bits
+    "sha256"
+  );
 }
 
 export function uniqueRid() {

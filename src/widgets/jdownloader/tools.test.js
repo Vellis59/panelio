@@ -1,12 +1,26 @@
 import crypto from "crypto";
 import { describe, expect, it, vi } from "vitest";
 
-import { createEncryptionToken, decrypt, encrypt, sha256, uniqueRid, validateRid } from "./tools";
+import { createEncryptionToken, decrypt, encrypt, sha256, deriveKey, uniqueRid, validateRid } from "./tools";
 
 describe("widgets/jdownloader/tools", () => {
   it("sha256 returns a 32-byte buffer", () => {
     expect(sha256("hello")).toBeInstanceOf(Buffer);
     expect(sha256("hello")).toHaveLength(32);
+  });
+
+  it("deriveKey returns a 32-byte buffer with PBKDF2", () => {
+    const key = deriveKey("testpassword");
+    expect(key).toBeInstanceOf(Buffer);
+    expect(key).toHaveLength(32);
+
+    // Same password should produce same key (deterministic)
+    const key2 = deriveKey("testpassword");
+    expect(key).toEqual(key2);
+
+    // Different passwords should produce different keys
+    const key3 = deriveKey("different");
+    expect(key).not.toEqual(key3);
   });
 
   it("uniqueRid returns an integer", () => {

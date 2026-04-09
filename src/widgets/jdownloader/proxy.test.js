@@ -8,6 +8,7 @@ const { httpProxy, getServiceWidget, tools, logger } = vi.hoisted(() => ({
   tools: {
     uniqueRid: vi.fn(() => 123),
     sha256: vi.fn(() => "secret"),
+    deriveKey: vi.fn(() => "secret"),
     validateRid: vi.fn(() => true),
     createEncryptionToken: vi.fn(() => "enc-token"),
     decrypt: vi.fn((cipherText) => {

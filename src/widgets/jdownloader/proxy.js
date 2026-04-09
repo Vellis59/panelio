@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import querystring from "querystring";
 
-import { createEncryptionToken, decrypt, encrypt, sha256, uniqueRid, validateRid } from "./tools";
+import { createEncryptionToken, decrypt, encrypt, deriveKey, uniqueRid, validateRid } from "./tools";
 
 import getServiceWidget from "utils/config/service-helpers";
 import createLogger from "utils/logger";
@@ -130,8 +130,8 @@ export default async function jdownloaderProxyHandler(req, res) {
   const { password } = widget;
 
   const appKey = "homepage";
-  const loginSecret = sha256(`${username}${password}server`);
-  const deviceSecret = sha256(`${username}${password}device`);
+  const loginSecret = deriveKey(`${username}${password}server`);
+  const deviceSecret = deriveKey(`${username}${password}device`);
   const email = username;
 
   const loginData = await login(loginSecret, deviceSecret, {
