@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const { useSWR, Resource, Error } = vi.hoisted(() => ({
   useSWR: vi.fn(),
   Resource: vi.fn(() => <div data-testid="resource" />),
-  Error: vi.fn(() => <div data-testid="error" />),
+  Error: vi.fn(function() { return <div data-testid="error" /> }),
 }));
 
 vi.mock("swr", () => ({ default: useSWR }));

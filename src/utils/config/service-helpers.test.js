@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { state, fs, yaml, config, Docker, dockerCfg, kubeCfg, kubeApi } = vi.hoisted(() => {
+const { state, fs, yaml, config, Docker, getDockerArguments, kubeCfg, kubeApi } = vi.hoisted(() => {
   const state = {
     servicesYaml: null,
     dockerYaml: null,
@@ -40,14 +40,28 @@ const { state, fs, yaml, config, Docker, dockerCfg, kubeCfg, kubeApi } = vi.hois
     default: vi.fn(),
   };
 
-  const Docker = vi.fn((conn) => ({
-    listContainers: vi.fn(async () => state.dockerContainersByServer[conn?.serverName] ?? state.dockerContainers),
-    listServices: vi.fn(async () => state.dockerServicesByServer[conn?.serverName] ?? state.dockerContainers),
-  }));
+  // Use a named function expression so `new Docker(...)` creates a proper `this` instance.
+  const Docker = vi.fn(function Docker(conn) {
+    this.listContainers = vi.fn(async () => state.dockerContainersByServer[conn?.serverName] ?? state.dockerContainers);
+    this.listServices = vi.fn(async () => state.dockerServicesByServer[conn?.serverName] ?? state.dockerContainers);
+  });
 
-  const dockerCfg = {
-    default: vi.fn((serverName) => ({ conn: { serverName } })),
-  };
+  // Mock getDockerArguments directly — bypasses yaml/fs dependency entirely.
+  const getDockerArguments = vi.fn((serverName) => {
+    if (state.dockerYaml && state.dockerYaml[serverName]) {
+      const sc = state.dockerYaml[serverName];
+      return {
+        conn: sc.socket
+          ? { socketPath: sc.socket, serverName }
+          : sc.host
+            ? { host: sc.host, port: sc.port, serverName }
+            : { socketPath: "/var/run/docker.sock", serverName },
+        swarm: !!sc.swarm,
+      };
+    }
+    // Fallback: return a conn with serverName so Docker mock can look it up.
+    return { conn: { serverName }, swarm: false };
+  });
 
   const kubeCfg = {
     getKubeConfig: vi.fn(() => state.kubeConfig),
@@ -61,7 +75,7 @@ const { state, fs, yaml, config, Docker, dockerCfg, kubeCfg, kubeApi } = vi.hois
     constructedServiceFromResource: vi.fn(async () => state.kubeServices.shift()),
   };
 
-  return { state, fs, yaml, config, Docker, dockerCfg, kubeCfg, kubeApi };
+  return { state, fs, yaml, config, Docker, getDockerArguments, kubeCfg, kubeApi };
 });
 
 vi.mock("fs", () => ({
@@ -75,7 +89,7 @@ vi.mock("js-yaml", () => ({
 
 vi.mock("utils/config/config", () => config);
 vi.mock("dockerode", () => ({ default: Docker }));
-vi.mock("utils/config/docker", () => dockerCfg);
+vi.mock("utils/config/docker", () => ({ default: getDockerArguments }));
 vi.mock("utils/config/kubernetes", () => kubeCfg);
 vi.mock("utils/kubernetes/export", () => ({ default: kubeApi }));
 

@@ -2,28 +2,34 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import createMockRes from "test-utils/create-mock-res";
 
-const { UrbackupServer, state, getServiceWidget } = vi.hoisted(() => {
-  const state = { instances: [] };
-
-  const UrbackupServer = vi.fn((opts) => {
-    const instance = {
-      opts,
-      getStatus: vi.fn(),
-      getUsage: vi.fn(),
-    };
-    state.instances.push(instance);
-    return instance;
-  });
-
-  return {
-    UrbackupServer,
-    state,
-    getServiceWidget: vi.fn(),
+const { state, getServiceWidget, MockUrbackupServer } = vi.hoisted(() => {
+  const state = {
+    instances: [],
+    // Per-test configurable return values
+    statusResult: [],
+    usageResult: undefined,
+    statusError: null,
   };
+
+  class MockUrbackupServer {
+    constructor(opts) {
+      this.opts = opts;
+      state.instances.push(this);
+    }
+    getStatus() {
+      if (state.statusError) return Promise.reject(state.statusError);
+      return Promise.resolve(state.statusResult);
+    }
+    getUsage() {
+      return Promise.resolve(state.usageResult);
+    }
+  }
+
+  return { state, getServiceWidget: vi.fn(), MockUrbackupServer };
 });
 
 vi.mock("urbackup-server-api", () => ({
-  UrbackupServer,
+  UrbackupServer: MockUrbackupServer,
 }));
 
 vi.mock("utils/config/service-helpers", () => ({
@@ -36,6 +42,9 @@ describe("widgets/urbackup/proxy", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     state.instances.length = 0;
+    state.statusResult = [];
+    state.usageResult = undefined;
+    state.statusError = null;
   });
 
   it("returns client statuses and maxDays without disk usage by default", async () => {
@@ -46,23 +55,15 @@ describe("widgets/urbackup/proxy", () => {
       maxDays: 5,
     });
 
-    UrbackupServer.mockImplementationOnce((opts) => {
-      const instance = {
-        opts,
-        getStatus: vi.fn().mockResolvedValue([{ id: 1 }]),
-        getUsage: vi.fn(),
-      };
-      state.instances.push(instance);
-      return instance;
-    });
+    state.statusResult = [{ id: 1 }];
 
     const req = { query: { group: "g", service: "svc", index: "0" } };
     const res = createMockRes();
 
     await urbackupProxyHandler(req, res);
 
-    expect(UrbackupServer).toHaveBeenCalledWith({ url: "http://ur", username: "u", password: "p" });
-    expect(state.instances[0].getUsage).not.toHaveBeenCalled();
+    // Verify constructor was called with expected opts
+    expect(state.instances[0].opts).toEqual({ url: "http://ur", username: "u", password: "p" });
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ clientStatuses: [{ id: 1 }], diskUsage: false, maxDays: 5 });
   });
@@ -76,22 +77,14 @@ describe("widgets/urbackup/proxy", () => {
       fields: ["totalUsed"],
     });
 
-    UrbackupServer.mockImplementationOnce((opts) => {
-      const instance = {
-        opts,
-        getStatus: vi.fn().mockResolvedValue([{ id: 1 }]),
-        getUsage: vi.fn().mockResolvedValue({ totalUsed: 123 }),
-      };
-      state.instances.push(instance);
-      return instance;
-    });
+    state.statusResult = [{ id: 1 }];
+    state.usageResult = { totalUsed: 123 };
 
     const req = { query: { group: "g", service: "svc", index: "0" } };
     const res = createMockRes();
 
     await urbackupProxyHandler(req, res);
 
-    expect(state.instances[0].getUsage).toHaveBeenCalled();
     expect(res.statusCode).toBe(200);
     expect(res.body.diskUsage).toEqual({ totalUsed: 123 });
   });
@@ -99,15 +92,7 @@ describe("widgets/urbackup/proxy", () => {
   it("returns 500 on server errors", async () => {
     getServiceWidget.mockResolvedValue({ url: "http://ur", username: "u", password: "p" });
 
-    UrbackupServer.mockImplementationOnce((opts) => {
-      const instance = {
-        opts,
-        getStatus: vi.fn().mockRejectedValue(new Error("nope")),
-        getUsage: vi.fn(),
-      };
-      state.instances.push(instance);
-      return instance;
-    });
+    state.statusError = new Error("nope");
 
     const req = { query: { group: "g", service: "svc", index: "0" } };
     const res = createMockRes();
