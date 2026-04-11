@@ -82,6 +82,9 @@
       "@tailwindcss/oxide",
       "osx-temperature-sensor",
       "sharp"
-    ]
+    ],
+    "overrides": {
+      "fast-xml-parser": "^5.5.7"
+    }
   }
 }
