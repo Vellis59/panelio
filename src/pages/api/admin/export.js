@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       bundle._exportedAt = new Date().toISOString();
       bundle._version = "1.0.0";
 
-      res.setHeader("Content-Disposition", `attachment; filename="homepage-config-${new Date().toISOString().slice(0, 10)}.json"`);
+      res.setHeader("Content-Disposition", `attachment; filename="panelio-config-${new Date().toISOString().slice(0, 10)}.json"`);
       return res.status(200).json(bundle);
     }
 

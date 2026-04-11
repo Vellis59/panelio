@@ -1073,7 +1073,7 @@ function SettingsTab({ demoMode }) {
       {/* Panelio Overview customization */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
         <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">🏠 Homepage Overview</h3>
-        <p className="text-xs text-gray-400 mb-3">Customize the overview section shown on your homepage.</p>
+        <p className="text-xs text-gray-400 mb-3">Customize the overview section shown on your Panelio.</p>
         <div className="space-y-3">
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Title</label>
@@ -1107,7 +1107,7 @@ function SettingsTab({ demoMode }) {
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
         <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">🪟 Service Card Style</h3>
-        <p className="text-xs text-gray-400 mb-3">Choose the visual style for service cards on the homepage.</p>
+        <p className="text-xs text-gray-400 mb-3">Choose the visual style for service cards on your Panelio.</p>
         <div>
           <label className="text-xs text-gray-500 mb-1 block">Card style</label>
           <select
@@ -1144,7 +1144,7 @@ function SettingsTab({ demoMode }) {
       {/* Panelio Greeting & Clock */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-4">
         <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-3">👋 Header Greeting & Clock</h3>
-        <p className="text-xs text-gray-400 mb-3">Customize the greeting and clock shown in the header of your homepage.</p>
+        <p className="text-xs text-gray-400 mb-3">Customize the greeting and clock shown in the header of your Panelio.</p>
         <div className="space-y-3">
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Your name (shown in greeting)</label>
