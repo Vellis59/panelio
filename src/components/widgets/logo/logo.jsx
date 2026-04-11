@@ -15,57 +15,20 @@ export default function Logo({ options }) {
             <ResolvedIcon icon={options.icon} width={48} height={48} />
           </div>
         ) : (
-          // fallback to homepage logo
+          // Panelio logo fallback
           <div className="fallback w-12 h-12">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1024 1024"
-              style={{
-                enableBackground: "new 0 0 1024 1024",
-              }}
-              xmlSpace="preserve"
+              viewBox="0 0 256 256"
               className="w-full h-full"
             >
-              <style>
-                {
-                  ".st0{display:none}.st3{stroke-linecap:square}.st3,.st4{fill:none;stroke:#fff;stroke-miterlimit:10}.st6{display:inline;fill:#333}.st7{fill:#fff}"
-                }
-              </style>
-              <g id="Icon">
-                <path
-                  d="M771.9 191c27.7 0 50.1 26.5 50.1 59.3v186.4l-100.2.3V250.3c0-32.8 22.4-59.3 50.1-59.3z"
-                  style={{
-                    fill: "rgba(var(--color-logo-start))",
-                  }}
-                />
-                <linearGradient
-                  id="homepage_logo_gradient"
-                  gradientUnits="userSpaceOnUse"
-                  x1={200.746}
-                  y1={225.015}
-                  x2={764.986}
-                  y2={789.255}
-                >
-                  <stop
-                    offset={0}
-                    style={{
-                      stopColor: "rgba(var(--color-logo-start))",
-                    }}
-                  />
-                  <stop
-                    offset={1}
-                    style={{
-                      stopColor: "rgba(var(--color-logo-stop))",
-                    }}
-                  />
-                </linearGradient>
-                <path
-                  d="M721.8 250.3c0-32.7 22.4-59.3 50.1-59.3H253.1c-27.7 0-50.1 26.5-50.1 59.3v582.2l90.2-75.7-.1-130.3H375v61.8l88-73.8 258.8 217.9V250.6"
-                  style={{
-                    fill: "url(#homepage_logo_gradient)",
-                  }}
-                />
-              </g>
+              <rect width="256" height="256" rx="24" fill="#0B0F14"/>
+              <rect x="32" y="48" width="88" height="56" rx="6" fill="#3B82F6"/>
+              <rect x="136" y="48" width="88" height="28" rx="6" fill="#3B82F6"/>
+              <rect x="136" y="88" width="56" height="16" rx="4" fill="#3B82F6" opacity="0.5"/>
+              <rect x="32" y="120" width="56" height="88" rx="6" fill="#3B82F6"/>
+              <rect x="104" y="120" width="120" height="88" rx="6" fill="#3B82F6"/>
+              <rect x="32" y="120" width="16" height="88" rx="4" fill="#3B82F6" opacity="0.4"/>
             </svg>
           </div>
         )}
