@@ -1,12 +1,12 @@
-site_name: Homepage
+site_name: Panelio
 
 # Project information
-site_url: https://gethomepage.dev/
+site_url: https://panelio.vellis.cc/
 
 # Repository
-repo_name: gethomepage/homepage
-repo_url: https://github.com/gethomepage/homepage
-edit_uri: https://github.com/gethomepage/homepage/tree/main/docs/
+repo_name: Vellis59/panelio
+repo_url: https://github.com/Vellis59/panelio
+edit_uri: https://github.com/Vellis59/panelio/tree/main/docs/
 
 nav:
   - "Home":
@@ -217,7 +217,7 @@ nav:
       - more/translations.md
       - more/coverage.md
       - more/sponsors.md
-      - more/homepage-move.md
+      - more/about.md
 
 theme:
   name: material
@@ -264,13 +264,9 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/discord
-      link: https://discord.gg/k4ruYNrudu
+      link: https://discord.gg/panelio
     - icon: fontawesome/brands/github
-      link: https://github.com/gethomepage/homepage
-    - icon: simple/opencollective
-      link: https://opencollective.com/homepage
-    - icon: simple/patreon
-      link: https://www.patreon.com/gethomepage
+      link: https://github.com/Vellis59/panelio
 
 markdown_extensions:
   - pymdownx.highlight:
