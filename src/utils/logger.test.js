@@ -94,7 +94,7 @@ describe("utils/logger", () => {
 
     const transports = state.lastCreateLoggerArgs.transports;
     expect(transports).toHaveLength(1);
-    expect(transports[0].opts.filename).toBe("/tmp/logs/homepage.log");
+    expect(transports[0].opts.filename).toBe("/tmp/logs/panelio.log");
   });
 
   it("defaults to both transports for unknown LOG_TARGETS and patches console methods", async () => {
@@ -120,7 +120,7 @@ describe("utils/logger", () => {
     createLogger("x");
 
     const transports = state.lastCreateLoggerArgs.transports;
-    expect(transports[0].opts.filename).toBe("/conf/logs/homepage.log");
+    expect(transports[0].opts.filename).toBe("/conf/logs/panelio.log");
   });
 
   it("formats messages and stacks through the printf formatter", async () => {

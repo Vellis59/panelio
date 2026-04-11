@@ -144,7 +144,7 @@ describe("utils/config/api-response", () => {
     const groups = await servicesResponse();
 
     expect(groups).toEqual([]);
-    expect(debugSpy).toHaveBeenCalledWith("No containers were found with homepage labels.");
+    expect(debugSpy).toHaveBeenCalledWith("No containers were found with panelio or homepage labels.");
 
     debugSpy.mockRestore();
   });

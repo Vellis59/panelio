@@ -49,8 +49,8 @@ describe("middleware", () => {
       {
         error: "Host validation failed.",
         message: 'This request used the host "evil.com", but it is not currently allowed.',
-        hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS, or use * only if you fully trust the deployment environment.",
-        suggestedEnv: "HOMEPAGE_ALLOWED_HOSTS=evil.com",
+        hint: "Add the exact host to PANELIO_ALLOWED_HOSTS (HOMEPAGE_ALLOWED_HOSTS as legacy), or use * only if you fully trust the deployment environment.",
+        suggestedEnv: "PANELIO_ALLOWED_HOSTS=evil.com",
         allowedHosts: ["localhost:3000", "127.0.0.1:3000", "[::1]:3000"],
         docs: "/docs/troubleshooting/host-validation",
       },

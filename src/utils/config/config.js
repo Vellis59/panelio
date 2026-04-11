@@ -4,7 +4,7 @@ import { join } from "path";
 import yaml from "js-yaml";
 import cache from "memory-cache";
 
-const cacheKey = "panelioEnvironmentVariables";
+const cacheKey = "homepageEnvironmentVariables";
 const panelioVarPrefix = "PANELIO_VAR_";
 const panelioFilePrefix = "PANELIO_FILE_";
 const legacyHomepageVarPrefix = "HOMEPAGE_VAR_";
