@@ -16,8 +16,8 @@ function stripDefaultPort(host) {
 function buildAllowedHosts() {
   const port = process.env.PORT || 3000;
   const defaults = [`localhost:${port}`, `127.0.0.1:${port}`, `[::1]:${port}`];
-  const configured = process.env.HOMEPAGE_ALLOWED_HOSTS
-    ? process.env.HOMEPAGE_ALLOWED_HOSTS.split(",").map((entry) => entry.trim()).filter(Boolean)
+  const configured = (process.env.PANELIO_ALLOWED_HOSTS || process.env.HOMEPAGE_ALLOWED_HOSTS)
+    ? (process.env.PANELIO_ALLOWED_HOSTS || process.env.HOMEPAGE_ALLOWED_HOSTS).split(",").map((entry) => entry.trim()).filter(Boolean)
     : [];
 
   const expanded = new Set();
@@ -33,12 +33,12 @@ function buildAllowedHosts() {
 
 function getPanelioHostHelp(host, allowedHosts) {
   const hostText = host || "(missing host header)";
-  const suggestedEnv = host ? `HOMEPAGE_ALLOWED_HOSTS=${host}` : "HOMEPAGE_ALLOWED_HOSTS=<your-domain:port>";
+  const suggestedEnv = host ? `PANELIO_ALLOWED_HOSTS=${host}` : "PANELIO_ALLOWED_HOSTS=<your-domain:port>";
 
   return {
     error: "Host validation failed.",
     message: `This request used the host \"${hostText}\", but it is not currently allowed.`,
-    hint: "Add the exact host to HOMEPAGE_ALLOWED_HOSTS, or use * only if you fully trust the deployment environment.",
+    hint: "Add the exact host to PANELIO_ALLOWED_HOSTS (HOMEPAGE_ALLOWED_HOSTS as legacy), or use * only if you fully trust the deployment environment.",
     suggestedEnv,
     allowedHosts: Array.from(allowedHosts),
     docs: "/docs/troubleshooting/host-validation",
@@ -48,12 +48,12 @@ function getPanelioHostHelp(host, allowedHosts) {
 export function middleware(req) {
   // Check the Host header, if HOMEPAGE_ALLOWED_HOSTS is set
   const host = normalizeHost(req.headers.get("host"));
-  const allowAll = process.env.HOMEPAGE_ALLOWED_HOSTS === "*";
+  const allowAll = (process.env.PANELIO_ALLOWED_HOSTS || process.env.HOMEPAGE_ALLOWED_HOSTS) === "*";
   const allowedHosts = buildAllowedHosts();
 
   if (!allowAll && (!host || (!allowedHosts.has(host) && !allowedHosts.has(stripDefaultPort(host))))) {
     console.error(
-      `Host validation failed for: ${host}. Allowed hosts: ${Array.from(allowedHosts).join(", ")}. Hint: Set HOMEPAGE_ALLOWED_HOSTS to include the exact host shown here.`,
+      `Host validation failed for: ${host}. Allowed hosts: ${Array.from(allowedHosts).join(", ")}. Hint: Set PANELIO_ALLOWED_HOSTS to include the exact host shown here.`,
     );
     return NextResponse.json(getPanelioHostHelp(host, allowedHosts), { status: 400 });
   }

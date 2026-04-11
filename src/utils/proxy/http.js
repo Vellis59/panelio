@@ -82,7 +82,7 @@ export function httpRequest(url, params) {
   return handleRequest(http, url, params);
 }
 
-export async function cachedRequest(url, duration = 5, ua = "homepage") {
+export async function cachedRequest(url, duration = 5, ua = "panelio") {
   const cached = cache.get(url);
 
   if (cached) {
@@ -113,7 +113,7 @@ export async function cachedRequest(url, duration = 5, ua = "homepage") {
 // Fixes DNS resolution issues with Alpine/musl libc in k8s
 const FALLBACK_CODES = new Set(["ENOTFOUND", "EAI_NONAME"]);
 
-function homepageDNSLookupFn() {
+function panelioDNSLookupFn() {
   const normalizeOptions = (options) => {
     if (typeof options === "number") {
       return { family: options, all: false, lookupOptions: { family: options } };
@@ -226,10 +226,10 @@ function homepageDNSLookupFn() {
 
 export async function httpProxy(url, params = {}) {
   const constructedUrl = new URL(url);
-  const disableIpv6 = process.env.HOMEPAGE_PROXY_DISABLE_IPV6 === "true";
+  const disableIpv6 = (process.env.PANELIO_PROXY_DISABLE_IPV6 || process.env.HOMEPAGE_PROXY_DISABLE_IPV6) === "true";
   const agentOptions = {
     ...(disableIpv6 ? { family: 4, autoSelectFamily: false } : { autoSelectFamilyAttemptTimeout: 500 }),
-    lookup: homepageDNSLookupFn(),
+    lookup: panelioDNSLookupFn(),
   };
 
   let request = null;

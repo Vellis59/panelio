@@ -4,13 +4,15 @@ import { join } from "path";
 import yaml from "js-yaml";
 import cache from "memory-cache";
 
-const cacheKey = "homepageEnvironmentVariables";
-const homepageVarPrefix = "HOMEPAGE_VAR_";
-const homepageFilePrefix = "HOMEPAGE_FILE_";
+const cacheKey = "panelioEnvironmentVariables";
+const panelioVarPrefix = "PANELIO_VAR_";
+const panelioFilePrefix = "PANELIO_FILE_";
+const legacyHomepageVarPrefix = "HOMEPAGE_VAR_";
+const legacyHomepageFilePrefix = "HOMEPAGE_FILE_";
 
-export const CONF_DIR = process.env.HOMEPAGE_CONFIG_DIR
-  ? process.env.HOMEPAGE_CONFIG_DIR
-  : join(process.cwd(), "config");
+export const CONF_DIR = process.env.PANELIO_CONFIG_DIR
+  ? process.env.PANELIO_CONFIG_DIR
+  : (process.env.HOMEPAGE_CONFIG_DIR || join(process.cwd(), "config"));
 
 export default function checkAndCopyConfig(config) {
   // Ensure config directory exists
@@ -54,7 +56,7 @@ function getCachedEnvironmentVars() {
   if (!cachedVars) {
     // initialize cache
     cachedVars = Object.entries(process.env).filter(
-      ([key]) => key.includes(homepageVarPrefix) || key.includes(homepageFilePrefix),
+      ([key]) => key.includes(panelioVarPrefix) || key.includes(panelioFilePrefix) || key.includes(legacyHomepageVarPrefix) || key.includes(legacyHomepageFilePrefix),
     );
     cache.put(cacheKey, cachedVars);
   }
@@ -67,9 +69,15 @@ export function substituteEnvironmentVars(str) {
     // crude check if we have vars to replace
     const cachedVars = getCachedEnvironmentVars();
     cachedVars.forEach(([key, value]) => {
-      if (key.startsWith(homepageVarPrefix)) {
+      if (key.startsWith(panelioVarPrefix)) {
         result = result.replaceAll(`{{${key}}}`, value);
-      } else if (key.startsWith(homepageFilePrefix)) {
+      } else if (key.startsWith(panelioFilePrefix)) {
+        const filename = value;
+        const fileContents = readFileSync(filename, "utf8");
+        result = result.replaceAll(`{{${key}}}`, fileContents);
+      } else if (key.startsWith(legacyHomepageVarPrefix)) {
+        result = result.replaceAll(`{{${key}}}`, value);
+      } else if (key.startsWith(legacyHomepageFilePrefix)) {
         const filename = value;
         const fileContents = readFileSync(filename, "utf8");
         result = result.replaceAll(`{{${key}}}`, fileContents);

@@ -96,33 +96,38 @@ export async function servicesFromDocker() {
           const containerName = isSwarm ? shvl.get(container, "Spec.Name") : container.Names[0];
 
           Object.keys(containerLabels).forEach((label) => {
-            if (label.startsWith("homepage.")) {
-              let value = label.replace("homepage.", "");
-              if (instanceName && value.startsWith(`instance.${instanceName}.`)) {
-                value = value.replace(`instance.${instanceName}.`, "");
-              } else if (value.startsWith("instance.")) {
-                return;
-              }
+            // Support both panelio.* and homepage.* labels (legacy)
+            // panelio.* labels take precedence
+            let isPanelio = label.startsWith("panelio.");
+            let isHomepage = label.startsWith("homepage.");
 
-              if (!constructedService) {
-                constructedService = {
-                  container: containerName.replace(/^\//, ""),
-                  server: serverName,
-                  weight: 0,
-                  type: "service",
-                };
-              }
-              let substitutedVal = substituteEnvironmentVars(containerLabels[label]);
-              if (value === "widget.version" || /^widgets\[\d+\]\.version$/.test(value)) {
-                substitutedVal = parseVersionForUrl(substitutedVal);
-              }
-              shvl.set(constructedService, value, substitutedVal);
+            if (!isPanelio && !isHomepage) return;
+
+            let value = isPanelio ? label.replace("panelio.", "") : label.replace("homepage.", "");
+            if (instanceName && value.startsWith(`instance.${instanceName}.`)) {
+              value = value.replace(`instance.${instanceName}.`, "");
+            } else if (value.startsWith("instance.")) {
+              return;
             }
+
+            if (!constructedService) {
+              constructedService = {
+                container: containerName.replace(/^\//, ""),
+                server: serverName,
+                weight: 0,
+                type: "service",
+              };
+            }
+            let substitutedVal = substituteEnvironmentVars(containerLabels[label]);
+            if (value === "widget.version" || /^widgets\[\d+\]\.version$/.test(value)) {
+              substitutedVal = parseVersionForUrl(substitutedVal);
+            }
+            shvl.set(constructedService, value, substitutedVal);
           });
 
           if (constructedService && (!constructedService.name || !constructedService.group)) {
             logger.error(
-              `Error constructing service using homepage labels for container '${containerName.replace(
+              `Error constructing service using panelio/homepage labels for container '${containerName.replace(
                 /^\//,
                 "",
               )}'. Ensure required labels are present.`,

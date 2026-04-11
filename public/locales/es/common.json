@@ -1216,7 +1216,7 @@
                 "settings": "Configuración",
                 "preview": "Vista previa",
                 "backup": "Copia de seguridad",
-                "viewHomepage": "← Ver homepage",
+                "viewPanelio": "← Ver homepage",
                 "logout": "Cerrar sesión"
             },
             "common": {

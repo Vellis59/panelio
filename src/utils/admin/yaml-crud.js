@@ -7,7 +7,7 @@ import createLogger from "utils/logger";
 const logger = createLogger("adminYaml");
 
 /**
- * Trigger Next.js revalidation of the homepage after config changes
+ * Trigger Next.js revalidation of Panelio after config changes
  */
 async function triggerRevalidate() {
   try {
@@ -53,7 +53,7 @@ export async function writeConfig(filename, data) {
   const content = yaml.dump(data, { lineWidth: -1, quotingType: '"', forceQuotes: false });
   await fs.writeFile(filePath, content, "utf8");
 
-  // Trigger homepage revalidation (fire and forget)
+  // Trigger Panelio revalidation (fire and forget)
   triggerRevalidate();
   return true;
 }
