@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { render, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ColorContext } from "utils/contexts/color";
 
@@ -40,18 +40,30 @@ describe("components/favicon", () => {
     getContextSpy.mockRestore();
     toDataURLSpy.mockRestore();
   });
+});
+
+describe("components/favicon — defensive guard", () => {
+  // Top-level module-level mock: vi.doMock is hoisted by vitest automatically.
+  // We use a factory flag so this mock only affects this describe block.
+  vi.doMock("react", async () => {
+    const actual = await vi.importActual("react");
+    return {
+      ...actual,
+      // Run the effect immediately to hit the defensive guard before refs are attached.
+      useEffect: (fn) => fn(),
+    };
+  });
+
+  beforeEach(() => {
+    vi.resetModules();
+    document.head.querySelectorAll('link[rel="shortcut icon"]').forEach((el) => el.remove());
+  });
+
+  afterEach(() => {
+    vi.unmock("react");
+  });
 
   it("returns early when refs are missing (defensive guard)", async () => {
-    vi.resetModules();
-    vi.doMock("react", async () => {
-      const actual = await vi.importActual("react");
-      return {
-        ...actual,
-        // Run the effect immediately to hit the defensive guard before refs are attached.
-        useEffect: (fn) => fn(),
-      };
-    });
-
     const { ColorContext: TestColorContext } = await import("utils/contexts/color");
     const { default: FaviconWithMissingRefs } = await import("./favicon");
 
@@ -67,8 +79,5 @@ describe("components/favicon", () => {
     });
 
     expect(document.head.querySelector('link[rel="shortcut icon"]')).toBeNull();
-
-    vi.unmock("react");
-    vi.resetModules();
   });
 });

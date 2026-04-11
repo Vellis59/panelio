@@ -35,7 +35,7 @@ const {
   };
 
   const router = { asPath: "/" };
-  const i18n = { language: "en", changeLanguage: vi.fn() };
+  const i18n = { language: undefined, changeLanguage: vi.fn() };
 
   const getSettings = vi.fn(() => ({
     providers: {},
